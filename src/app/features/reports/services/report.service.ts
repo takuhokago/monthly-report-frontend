@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {
+  ReportCreateRequest,
   ReportDto,
   ReportListResponse,
   ReportResponse,
@@ -18,6 +19,13 @@ export class ReportService {
 
   getReports(): Observable<ReportListResponse> {
     return this.http.get<ReportListResponse>(this.API_URL, {
+      withCredentials: true,
+    });
+  }
+
+  // POST 新規登録
+  createReport(report: ReportCreateRequest): Observable<ReportResponse> {
+    return this.http.post<ReportResponse>(this.API_URL, report, {
       withCredentials: true,
     });
   }

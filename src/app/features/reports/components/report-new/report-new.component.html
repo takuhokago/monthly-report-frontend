@@ -1,0 +1,228 @@
+<div class="pt-5">
+  <form (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="reportMonth" class="form-label">日付</label>
+      <input
+        type="month"
+        id="reportMonth"
+        class="form-control"
+        [(ngModel)]="report.reportMonth"
+        name="reportMonth"
+        required
+      />
+    </div>
+
+    <div class="mb-3 row">
+      <div class="col-3">
+        <label for="fullName" class="form-label">氏名</label>
+        <input
+          type="text"
+          id="fullName"
+          class="form-control"
+          [value]=""
+          disabled
+        />
+      </div>
+
+      <div class="col-3">
+        <label for="departmentName" class="form-label">所属</label>
+        <input
+          type="text"
+          id="departmentName"
+          class="form-control"
+          [value]=""
+          disabled
+        />
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="contentBusiness" class="form-label">業務環境/開発環境</label>
+      <textarea
+        id="contentBusiness"
+        rows="6"
+        class="form-control"
+        [(ngModel)]="report.contentBusiness"
+        name="contentBusiness"
+      ></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="contentMember" class="form-label"
+        >その他メンバー関連内容</label
+      >
+      <textarea
+        id="contentMember"
+        rows="5"
+        class="form-control"
+        [(ngModel)]="report.contentMember"
+        name="contentMember"
+      ></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="contentCustomer" class="form-label">お客様情報</label>
+      <textarea
+        id="contentCustomer"
+        rows="5"
+        class="form-control"
+        [(ngModel)]="report.contentCustomer"
+        name="contentCustomer"
+      ></textarea>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <label for="timeWorked" class="form-label">勤務時間</label>
+        <div class="input-group">
+          <input
+            type="number"
+            class="form-control"
+            id="timeWorked"
+            [(ngModel)]="report.timeWorked"
+            name="timeWorked"
+            min="0"
+          />
+          <span class="input-group-text">時間</span>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="timeOver" class="form-label">残業時間</label>
+        <div class="input-group">
+          <input
+            type="number"
+            class="form-control"
+            id="timeOver"
+            [(ngModel)]="report.timeOver"
+            name="timeOver"
+            min="0"
+            max="200"
+          />
+          <span class="input-group-text">時間</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <label for="rateBusiness" class="form-label">業務目標達成率</label>
+        <div class="input-group">
+          <input
+            type="number"
+            class="form-control"
+            id="rateBusiness"
+            [(ngModel)]="report.rateBusiness"
+            name="rateBusiness"
+            min="0"
+            max="100"
+          />
+          <span class="input-group-text">%</span>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <label for="rateStudy" class="form-label">学習目標達成率</label>
+        <div class="input-group">
+          <input
+            type="number"
+            class="form-control"
+            id="rateStudy"
+            [(ngModel)]="report.rateStudy"
+            name="rateStudy"
+            min="0"
+            max="100"
+          />
+          <span class="input-group-text">%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="evaluationBusiness" class="form-label"
+        >業務目標（自己評価）</label
+      >
+      <textarea
+        id="evaluationBusiness"
+        rows="3"
+        class="form-control"
+        [(ngModel)]="report.evaluationBusiness"
+        name="evaluationBusiness"
+      ></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="evaluationStudy" class="form-label"
+        >学習目標（自己評価）</label
+      >
+      <textarea
+        id="evaluationStudy"
+        rows="3"
+        class="form-control"
+        [(ngModel)]="report.evaluationStudy"
+        name="evaluationStudy"
+      ></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="goalBusiness" class="form-label">業務目標（来月）</label>
+      <textarea
+        id="goalBusiness"
+        rows="3"
+        class="form-control"
+        [(ngModel)]="report.goalBusiness"
+        name="goalBusiness"
+      ></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="goalStudy" class="form-label">学習目標（来月）</label>
+      <textarea
+        id="goalStudy"
+        rows="3"
+        class="form-control"
+        [(ngModel)]="report.goalStudy"
+        name="goalStudy"
+      ></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="contentCompany" class="form-label">会社関係</label>
+      <textarea
+        id="contentCompany"
+        rows="3"
+        class="form-control"
+        [(ngModel)]="report.contentCompany"
+        name="contentCompany"
+      ></textarea>
+    </div>
+
+    <div class="mb-3">
+      <label for="contentOthers" class="form-label">その他</label>
+      <textarea
+        id="contentOthers"
+        rows="3"
+        class="form-control"
+        [(ngModel)]="report.contentOthers"
+        name="contentOthers"
+      ></textarea>
+    </div>
+
+    <div class="mb-3 form-check">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="completeFlg"
+        [(ngModel)]="report.completeFlg"
+        name="completeFlg"
+      />
+      <label class="form-check-label" for="completeFlg"
+        >作成完了しました。</label
+      >
+    </div>
+
+    <div class="mb-3">
+      <button type="submit" class="btn btn-success">登録</button>
+    </div>
+  </form>
+</div>

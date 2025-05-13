@@ -37,3 +37,13 @@ export interface ReportListResponse {
 export interface ReportResponse {
   report: ReportDto;
 }
+
+export type ReportCreateRequest = Omit<
+  ReportDto,
+  | 'id'
+  | 'submittedAt'
+  | 'updatedAt'
+  | 'reportDeadline'
+  | 'approvalFlg'
+  | 'comment'
+>;
