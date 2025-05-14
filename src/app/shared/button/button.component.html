@@ -1,1 +1,26 @@
-<p>button works!</p>
+<!-- ルーターリンクか通常ボタンかで分岐 -->
+<a
+  *ngIf="routerLink"
+  [routerLink]="routerLink"
+  class="btn"
+  [ngClass]="[
+    'btn-' + color,
+    size === 'sm' ? 'btn-sm' : size === 'lg' ? 'btn-lg' : '',
+    block ? 'w-100' : ''
+  ]"
+>
+  {{ label }}
+</a>
+
+<button
+  *ngIf="!routerLink"
+  [type]="type"
+  class="btn"
+  [ngClass]="[
+    'btn-' + color,
+    size === 'sm' ? 'btn-sm' : size === 'lg' ? 'btn-lg' : '',
+    block ? 'w-100' : ''
+  ]"
+>
+  {{ label }}
+</button>

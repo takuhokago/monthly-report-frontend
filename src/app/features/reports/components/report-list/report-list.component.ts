@@ -3,12 +3,20 @@ import { ReportDto } from '../../models/report.dto';
 import { ReportService } from '../../services/report.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms'; // ★追加
+import { FormsModule } from '@angular/forms';
+import { ButtonComponent } from '../../../../shared/button/button.component';
+import { SelectComponent } from '../../../../shared/select/select.component';
 
 @Component({
   selector: 'app-report-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule], // ★FormsModuleを追加
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ButtonComponent,
+    SelectComponent,
+  ],
   templateUrl: './report-list.component.html',
   styleUrls: ['./report-list.component.scss'],
 })

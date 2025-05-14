@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './features/auth/guards/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 export const appRoutes: Routes = [
   {
@@ -36,6 +36,38 @@ export const appRoutes: Routes = [
       import(
         './features/reports/components/report-detail/report-detail.component'
       ).then((m) => m.ReportDetailComponent),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'employees',
+    loadComponent: () =>
+      import(
+        './features/employees/components/employee-list/employee-list.component'
+      ).then((m) => m.EmployeeListComponent),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'employees/new',
+    loadComponent: () =>
+      import(
+        './features/employees/components/employee-new/employee-new.component'
+      ).then((m) => m.EmployeeNewComponent),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'employees/:code',
+    loadComponent: () =>
+      import(
+        './features/employees/components/employee-detail/employee-detail.component'
+      ).then((m) => m.EmployeeDetailComponent),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'departments',
+    loadComponent: () =>
+      import(
+        './features/departments/components/department-settings/department-settings.component'
+      ).then((m) => m.DepartmentSettingsComponent),
     canActivate: [AuthGuard],
   },
 ];

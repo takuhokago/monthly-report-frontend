@@ -28,7 +28,10 @@ export class LoginComponent {
 
     this.authService.login(loginData).subscribe({
       next: (res) => {
-        // localStorage.setItem(...) は不要
+        console.log('ログイン成功:', res);
+
+        const user = this.authService.getCurrentUser();
+
         this.router.navigate(['/reports']);
       },
       error: (err) => {

@@ -12,7 +12,7 @@ import {
   providedIn: 'root',
 })
 export class ReportService {
-  private readonly API_URL = 'http://localhost:8080/api/reports';
+  private readonly API_URL = '/api/reports';
   private reportCache: ReportDto[] = [];
 
   constructor(private http: HttpClient) {}

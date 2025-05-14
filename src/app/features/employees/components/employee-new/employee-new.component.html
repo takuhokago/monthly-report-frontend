@@ -1,0 +1,102 @@
+<div class="container mt-5 pt-3">
+  <!-- タイトル -->
+  <div class="row mb-4 mt-3 align-items-center">
+    <div class="col-12 col-md-8 offset-md-2">
+      <h2 class="h3 mb-4 border-bottom pb-2">👤 従業員 新規作成</h2>
+
+      <form (ngSubmit)="onSubmit()" class="needs-validation" novalidate>
+        <!-- 従業員番号 -->
+        <div class="row mb-4">
+          <div class="col-12 col-md-6">
+            <label for="code" class="form-label">従業員番号</label>
+            <input
+              type="text"
+              id="code"
+              class="form-control"
+              [(ngModel)]="employee.code"
+              name="code"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- 氏名 -->
+        <div class="row g-3 mb-4">
+          <div class="col-12 col-md-6">
+            <label for="lastName" class="form-label">姓</label>
+            <input
+              type="text"
+              id="lastName"
+              class="form-control"
+              [(ngModel)]="employee.lastName"
+              name="lastName"
+              required
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <label for="firstName" class="form-label">名</label>
+            <input
+              type="text"
+              id="firstName"
+              class="form-control"
+              [(ngModel)]="employee.firstName"
+              name="firstName"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- メールアドレス -->
+        <div class="mb-4">
+          <label for="email" class="form-label">メールアドレス</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            [(ngModel)]="employee.email"
+            name="email"
+            required
+          />
+        </div>
+
+        <!-- 役割 & 所属 -->
+        <div class="row g-3 mb-4">
+          <div class="col-12 col-md-6">
+            <label for="role" class="form-label">役割</label>
+            <select
+              id="role"
+              class="form-select"
+              [(ngModel)]="employee.role"
+              name="role"
+              required
+            >
+              <option value="一般">一般</option>
+              <option value="管理者">管理者</option>
+            </select>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <label for="departmentName" class="form-label">所属</label>
+            <select
+              id="departmentName"
+              class="form-select"
+              [(ngModel)]="employee.departmentName"
+              name="departmentName"
+              required
+            >
+              <option value="">-- 所属を選択 --</option>
+              <option *ngFor="let dept of departments" [value]="dept.name">
+                {{ dept.name }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 送信ボタン -->
+        <div class="text-end">
+          <button type="submit" class="btn btn-primary px-4">登録</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

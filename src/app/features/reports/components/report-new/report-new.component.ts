@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ReportService } from '../../services/report.service';
 import { ReportDto } from '../../models/report.dto';
 import { ReportCreateRequest } from '../../models/report.dto';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   standalone: true,
@@ -14,32 +15,40 @@ import { ReportCreateRequest } from '../../models/report.dto';
 })
 export class ReportNewComponent {
   report: ReportCreateRequest = {
-  reportMonth: '',
-  contentBusiness: '',
-  timeWorked: 0,
-  timeOver: 0,
-  rateBusiness: 0,
-  rateStudy: 0,
-  trendBusiness: 0,
-  contentMember: '',
-  contentCustomer: '',
-  contentProblem: '',
-  evaluationBusiness: '',
-  evaluationStudy: '',
-  goalBusiness: '',
-  goalStudy: '',
-  contentCompany: '',
-  contentOthers: '',
-  completeFlg: false,
-  employeeCode: '', // ログインユーザーから取得する
-  employeeName: '',
-  departmentName: '',
-};
+    reportMonth: '',
+    contentBusiness: '',
+    timeWorked: 0,
+    timeOver: 0,
+    rateBusiness: 0,
+    rateStudy: 0,
+    trendBusiness: 0,
+    contentMember: '',
+    contentCustomer: '',
+    contentProblem: '',
+    evaluationBusiness: '',
+    evaluationStudy: '',
+    goalBusiness: '',
+    goalStudy: '',
+    contentCompany: '',
+    contentOthers: '',
+    completeFlg: false,
+    employeeCode: '',
+    employeeName: '',
+    departmentName: '',
+  };
 
   constructor(
     private reportService: ReportService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private authService: AuthService
+  ) {
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.report.employeeCode = user.code;
+      this.report.employeeName = user.name;
+      this.report.departmentName = user.department;
+    }
+  }
 
   onSubmit(): void {
     this.reportService.createReport(this.report).subscribe({

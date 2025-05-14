@@ -1,0 +1,14 @@
+<div
+  class="d-flex flex-column flex-md-row align-items-start align-items-md-center w-100 w-md-auto"
+>
+  <label class="me-2 mb-1 mb-md-0">{{ label }}:</label>
+  <select
+    class="form-select"
+    [ngModel]="value"
+    (ngModelChange)="updateValue($event)"
+  >
+    <option *ngFor="let option of options" [value]="option">
+      {{ getOptionLabel(option) }}
+    </option>
+  </select>
+</div>

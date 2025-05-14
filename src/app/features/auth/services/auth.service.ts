@@ -9,19 +9,37 @@ import { map, catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:8080/api/auth/login';
+  private readonly API_URL = '/api/auth/login';
 
-  constructor(private http: HttpClient) {}
+  private currentUser: LoginResponse | null = null;
+
+  constructor(private http: HttpClient) {
+    // ★ ローカルストレージから復元
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+      this.currentUser = JSON.parse(storedUser);
+    }
+  }
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(this.API_URL, credentials, {
-      withCredentials: true,
-    });
+    return this.http
+      .post<LoginResponse>(this.API_URL, credentials, {
+        withCredentials: true,
+      })
+      .pipe(
+        map((response) => {
+          this.currentUser = response;
+          localStorage.setItem('currentUser', JSON.stringify(response)); // ★ 保存
+          return response;
+        })
+      );
   }
 
   logout(): Observable<any> {
+    this.currentUser = null;
+    localStorage.removeItem('currentUser'); // ★ 削除
     return this.http.post(
-      'http://localhost:8080/api/auth/logout',
+      '/api/auth/logout',
       {},
       {
         withCredentials: true,
@@ -30,9 +48,13 @@ export class AuthService {
     );
   }
 
+  getCurrentUser(): LoginResponse | null {
+    return this.currentUser;
+  }
+
   isLoggedIn(): Observable<boolean> {
     return this.http
-      .get('http://localhost:8080/api/auth/me', {
+      .get('/api/auth/me', {
         withCredentials: true,
       })
       .pipe(
