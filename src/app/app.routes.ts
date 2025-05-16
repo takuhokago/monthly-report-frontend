@@ -39,6 +39,13 @@ export const appRoutes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'reports/:id/edit',
+    loadComponent: () =>
+      import(
+        './features/reports/components/report-edit/report-edit.component'
+      ).then((m) => m.ReportEditComponent),
+  },
+  {
     path: 'employees',
     loadComponent: () =>
       import(
