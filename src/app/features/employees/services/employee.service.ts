@@ -2,17 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, of, tap } from 'rxjs';
 import { EmployeeDto } from '../models/employee.dto';
+import { environment } from '../../../../environments/environment'; // 相対パスに修正
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmployeeService {
-  private readonly API_URL = '/api/employees';
+  private readonly API_URL = `${environment.apiBaseUrl}/employees`;
   private employeeCache: EmployeeDto[] = [];
 
   constructor(private http: HttpClient) {}
 
-  // APIから取得＆キャッシュ登録
   getAll(): Observable<EmployeeDto[]> {
     return this.http
       .get<{ listSize: number; employeeList: EmployeeDto[] }>(this.API_URL, {
@@ -20,21 +20,18 @@ export class EmployeeService {
       })
       .pipe(
         map((response) => response.employeeList),
-        tap((employees) => this.setCache(employees)) // ここでキャッシュに保存
+        tap((employees) => this.setCache(employees))
       );
   }
 
-  // 一覧キャッシュの setter
   setCache(employees: EmployeeDto[]): void {
     this.employeeCache = employees;
   }
 
-  // キャッシュから取得
   getCachedEmployeeByCode(code: string): EmployeeDto | undefined {
     return this.employeeCache.find((e) => String(e.code) === code);
   }
 
-  // キャッシュ優先で取得（なければAPI）
   getEmployeeByIdWithFallback(code: string): Observable<EmployeeDto> {
     const cached = this.getCachedEmployeeByCode(code);
     return cached
@@ -51,7 +48,7 @@ export class EmployeeService {
   }
 
   getByCode(code: string): Observable<EmployeeDto> {
-    return this.http.get<EmployeeDto>(`/api/employees/${code}`, {
+    return this.http.get<EmployeeDto>(`${this.API_URL}/${code}`, {
       withCredentials: true,
     });
   }

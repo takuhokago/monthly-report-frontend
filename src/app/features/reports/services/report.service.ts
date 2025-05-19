@@ -7,7 +7,7 @@ import {
   ReportListResponse,
   ReportResponse,
 } from '../models/report.dto';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

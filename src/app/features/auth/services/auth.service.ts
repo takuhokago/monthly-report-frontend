@@ -4,17 +4,17 @@ import { Observable, of } from 'rxjs';
 import { LoginRequest } from '../models/login-request.dto';
 import { LoginResponse } from '../models/login-response.dto';
 import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../../../environments/environment'; // ← 相対パスに修正
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly API_URL = '/api/auth/login';
+  private readonly API_BASE = `${environment.apiBaseUrl}/auth`;
 
   private currentUser: LoginResponse | null = null;
 
   constructor(private http: HttpClient) {
-    // ★ ローカルストレージから復元
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
       this.currentUser = JSON.parse(storedUser);
@@ -23,13 +23,13 @@ export class AuthService {
 
   login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http
-      .post<LoginResponse>(this.API_URL, credentials, {
+      .post<LoginResponse>(`${this.API_BASE}/login`, credentials, {
         withCredentials: true,
       })
       .pipe(
         map((response) => {
           this.currentUser = response;
-          localStorage.setItem('currentUser', JSON.stringify(response)); // ★ 保存
+          localStorage.setItem('currentUser', JSON.stringify(response));
           return response;
         })
       );
@@ -37,9 +37,9 @@ export class AuthService {
 
   logout(): Observable<any> {
     this.currentUser = null;
-    localStorage.removeItem('currentUser'); // ★ 削除
+    localStorage.removeItem('currentUser');
     return this.http.post(
-      '/api/auth/logout',
+      `${this.API_BASE}/logout`,
       {},
       {
         withCredentials: true,
@@ -54,7 +54,7 @@ export class AuthService {
 
   isLoggedIn(): Observable<boolean> {
     return this.http
-      .get('/api/auth/me', {
+      .get(`${this.API_BASE}/me`, {
         withCredentials: true,
       })
       .pipe(

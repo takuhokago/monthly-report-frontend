@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DepartmentDto } from '../models/department.dto';
 import { Observable } from 'rxjs';
+import { environment } from '../../../../environments/environment'; // 相対パスに修正
 
 @Injectable({
   providedIn: 'root',
 })
 export class DepartmentService {
-  private baseUrl = '/api/departments';
+  private baseUrl = `${environment.apiBaseUrl}/departments`;
 
   constructor(private http: HttpClient) {}
 
