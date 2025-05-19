@@ -7,12 +7,13 @@ import {
   ReportListResponse,
   ReportResponse,
 } from '../models/report.dto';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReportService {
-  private readonly API_URL = '/api/reports';
+  private readonly API_URL = `${environment.apiBaseUrl}/reports`;
   private reportCache: ReportDto[] = [];
 
   constructor(private http: HttpClient) {}
@@ -23,7 +24,6 @@ export class ReportService {
     });
   }
 
-  // POST 新規登録
   createReport(report: ReportCreateRequest): Observable<ReportResponse> {
     return this.http.post<ReportResponse>(this.API_URL, report, {
       withCredentials: true,
@@ -72,7 +72,7 @@ export class ReportService {
   commentOnReport(id: number, comment: string): Observable<void> {
     return this.http.patch<void>(
       `${this.API_URL}/${id}/comment`,
-      { comment }, // JSON形式で送信
+      { comment },
       { withCredentials: true }
     );
   }
