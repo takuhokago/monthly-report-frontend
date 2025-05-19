@@ -24,6 +24,7 @@ export class ReportListComponent implements OnInit {
   reports: ReportDto[] = [];
   reportMonthList: string[] = [];
   selectedMonth: string = '';
+  loading: boolean = true;
 
   constructor(private reportService: ReportService) {}
 
@@ -42,9 +43,11 @@ export class ReportListComponent implements OnInit {
           .sort()
           .reverse();
         this.selectedMonth = this.reportMonthList[0]; // 最新の月を初期選択
+        this.loading = false; // ローディング完了
       },
       error: (err) => {
         console.error('取得失敗', err);
+        this.loading = false; // エラー時もローディング完了
       },
     });
   }

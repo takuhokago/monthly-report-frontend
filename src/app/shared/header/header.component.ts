@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../features/auth/services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -22,4 +23,13 @@ export class HeaderComponent {
       },
     });
   }
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
+
+  get userName(): string | null {
+  return this.authService.getCurrentUser()?.name || null;
+}
+
 }

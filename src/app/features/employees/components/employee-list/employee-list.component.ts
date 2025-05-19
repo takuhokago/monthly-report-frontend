@@ -15,12 +15,14 @@ import { ButtonComponent } from '../../../../shared/button/button.component';
 })
 export class EmployeeListComponent implements OnInit {
   employees: EmployeeDto[] = [];
+  loading: boolean = true;
 
   constructor(private employeeService: EmployeeService) {}
 
   ngOnInit(): void {
     this.employeeService.getAll().subscribe((data) => {
       this.employees = data;
+      this.loading = false;
     });
   }
 }

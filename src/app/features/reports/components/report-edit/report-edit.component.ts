@@ -1,0 +1,64 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { ReportService } from '../../services/report.service';
+import { ReportDto } from '../../models/report.dto';
+import { CharCountComponent } from '../../../../shared/char-count/char-count.component';
+import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { ButtonComponent } from '../../../../shared/button/button.component';
+import { NgForm } from '@angular/forms';
+
+@Component({
+  selector: 'app-report-edit',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    CharCountComponent,
+    RouterLink,
+    ButtonComponent,
+  ],
+  templateUrl: './report-edit.component.html',
+})
+export class ReportEditComponent implements OnInit {
+  reportId!: string;
+  report: ReportDto = {} as ReportDto;
+
+  constructor(
+    private route: ActivatedRoute,
+    private reportService: ReportService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.reportId = this.route.snapshot.paramMap.get('id')!;
+    this.reportService.getReportById(this.reportId, true).subscribe({
+      next: (res) => {
+        this.report = res.report;
+      },
+      error: (err) => {
+        console.error('取得失敗:', err);
+      },
+    });
+  }
+
+  onSubmit(form: NgForm): void {
+    if (form.invalid) {
+      form.control.markAllAsTouched();
+      return;
+    }
+
+    this.reportService.updateReport(this.reportId, this.report).subscribe({
+      next: (res) => {
+        alert('報告書を更新しました');
+        this.router.navigate(['/reports', this.reportId]);
+      },
+      error: (err) => {
+        console.error('更新に失敗しました:', err);
+        alert('報告書の更新に失敗しました');
+      },
+    });
+  }
+}

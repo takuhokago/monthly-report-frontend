@@ -5,7 +5,7 @@
       <h2 class="h3 mb-3">所属 設定</h2>
 
       <!-- 所属追加フォーム -->
-      <div class="input-group mb-3">
+      <div class="input-group mb-1">
         <input
           type="text"
           class="form-control"
@@ -14,12 +14,21 @@
         />
         <button class="btn btn-primary" (click)="addDepartment()">追加</button>
       </div>
+
+      <!-- エラーメッセージ表示 -->
+      <div *ngIf="errorMessage" class="text-danger small mb-3">
+        {{ errorMessage }}
+      </div>
     </div>
   </div>
 
   <!-- 所属一覧テーブル -->
   <div *ngIf="departments.length > 0; else noDepartments" class="row">
     <div class="col-12 col-md-8 offset-md-2">
+      <!-- 削除エラーがあれば表示 -->
+      <div *ngIf="deleteErrorMessage" class="text-danger small mb-2">
+        {{ deleteErrorMessage }}
+      </div>
       <div class="table-responsive">
         <table class="table table-striped table-hover align-middle text-nowrap">
           <thead>

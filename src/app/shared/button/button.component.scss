@@ -1,7 +1,7 @@
 :host {
-  display: inline-block;
-  min-width: 100px;
-  text-align: center;
+  display: inline-block;         // ✅ 横並びの余白を正しく制御
+  vertical-align: middle;        // ✅ 上下の位置ズレ防止（必要に応じて）
+  text-align: center;            // テキスト中央揃え
 
   @media (max-width: 576px) {
     width: 100%;

@@ -62,4 +62,9 @@ export class AuthService {
         catchError(() => of(false))
       );
   }
+
+  isAdmin(): boolean {
+    const role = this.currentUser?.role;
+    return role === '管理者' || role === 'ADMIN';
+  }
 }

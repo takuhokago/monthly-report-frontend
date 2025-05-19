@@ -38,12 +38,42 @@ export class ReportService {
     return this.reportCache.find((r) => r.id === Number(id));
   }
 
-  getReportByIdWithFallback(id: string): Observable<ReportResponse> {
+  getReportById(id: string, forceReload = false): Observable<ReportResponse> {
     const cached = this.getCachedReportById(id);
-    return cached
-      ? of({ report: cached })
-      : this.http.get<ReportResponse>(`${this.API_URL}/${id}`, {
-          withCredentials: true,
-        });
+    if (!forceReload && cached) {
+      return of({ report: cached });
+    }
+
+    return this.http.get<ReportResponse>(`${this.API_URL}/${id}`, {
+      withCredentials: true,
+    });
+  }
+
+  updateReport(id: string, report: ReportDto): Observable<ReportResponse> {
+    return this.http.put<ReportResponse>(`${this.API_URL}/${id}`, report, {
+      withCredentials: true,
+    });
+  }
+
+  deleteReport(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${id}`, {
+      withCredentials: true,
+    });
+  }
+
+  approveReport(id: number, approve: boolean): Observable<ReportResponse> {
+    return this.http.patch<ReportResponse>(
+      `${this.API_URL}/${id}/approval?approve=${approve}`,
+      null,
+      { withCredentials: true }
+    );
+  }
+
+  commentOnReport(id: number, comment: string): Observable<void> {
+    return this.http.patch<void>(
+      `${this.API_URL}/${id}/comment`,
+      { comment }, // JSON形式で送信
+      { withCredentials: true }
+    );
   }
 }

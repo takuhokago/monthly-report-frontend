@@ -1,0 +1,16 @@
+<div class="container py-5">
+  <h2 class="h3 mb-4 border-bottom pb-2">🧑‍💼 プロフィール</h2>
+
+  <!-- 表示切り替えボタン -->
+  <div class="mb-4">
+    <button class="btn btn-outline-primary" (click)="showForm = !showForm">
+      {{ showForm ? "編集を閉じる" : "プロフィールを編集" }}
+    </button>
+  </div>
+
+  <!-- 従業員編集フォーム（表示切り替え） -->
+  <app-employee-edit *ngIf="showForm" [selfMode]="true"></app-employee-edit>
+
+  <!-- 自分の報告書一覧テーブル -->
+  <app-report-table [filterByUser]="true"></app-report-table>
+</div>

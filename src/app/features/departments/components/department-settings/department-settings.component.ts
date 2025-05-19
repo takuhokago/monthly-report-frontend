@@ -13,6 +13,8 @@ import { DepartmentDto } from '../../models/department.dto';
 export class DepartmentSettingsComponent implements OnInit {
   departments: DepartmentDto[] = [];
   newDepartmentName = '';
+  errorMessage = ''; // エラーメッセージ用のプロパティ
+  deleteErrorMessage = ''; // 削除時のエラー
 
   constructor(private departmentService: DepartmentService) {}
 
@@ -32,18 +34,28 @@ export class DepartmentSettingsComponent implements OnInit {
     const trimmedName = this.newDepartmentName.trim();
     if (!trimmedName) return;
 
-    this.departmentService
-      .create({ name: trimmedName })
-      .subscribe((created) => {
+    this.departmentService.create({ name: trimmedName }).subscribe({
+      next: (created) => {
         this.departments.push(created);
         this.newDepartmentName = '';
-      });
+        this.errorMessage = ''; // エラーをクリア
+      },
+      error: (err) => {
+        // サーバーからのエラーが存在する場合はメッセージを表示
+        this.errorMessage = err.error?.message || '所属の追加に失敗しました';
+      },
+    });
   }
 
-  // 所属削除
   deleteDepartment(id: number): void {
-    this.departmentService.delete(id).subscribe(() => {
-      this.departments = this.departments.filter((d) => d.id !== id);
+    this.departmentService.delete(id).subscribe({
+      next: () => {
+        this.departments = this.departments.filter((d) => d.id !== id);
+        this.deleteErrorMessage = ''; // 成功時に削除エラーをリセット
+      },
+      error: (err) => {
+        this.deleteErrorMessage = err.error?.message || '削除に失敗しました';
+      },
     });
   }
 }
