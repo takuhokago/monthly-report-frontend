@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  apiBaseUrl: 'http://localhost:8080/api', // ← ローカルのSpring BootのURLに合わせて
+  production: true,
+  apiBaseUrl: 'https://monthly-report-api-1cdd61b8449d.herokuapp.com/api',
 };
