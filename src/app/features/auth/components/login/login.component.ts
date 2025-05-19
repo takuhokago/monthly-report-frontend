@@ -21,24 +21,31 @@ export class LoginComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit(): void {
-    const loginData: LoginRequest = {
-      code: this.code,
-      password: this.password,
-    };
+  const loginData: LoginRequest = {
+    code: this.code,
+    password: this.password,
+  };
 
-    this.authService.login(loginData).subscribe({
-      next: (res) => {
-        console.log('ログイン成功:', res);
+  this.authService.login(loginData).subscribe({
+    next: () => {
+      // ログイン成功後にユーザー情報を取得
+      this.authService.fetchMe().subscribe({
+        next: (user) => {
+          console.log('ログインユーザー:', user);
+          this.router.navigate(['/reports']);
+        },
+        error: (err) => {
+          console.error('ユーザー情報取得失敗:', err);
+          this.errorMessage = 'ログイン後のユーザー情報取得に失敗しました。';
+        },
+      });
+    },
+    error: (err) => {
+      console.error(err);
+      this.errorMessage =
+        'ログインに失敗しました。社員番号またはパスワードを確認してください。';
+    },
+  });
+}
 
-        const user = this.authService.getCurrentUser();
-
-        this.router.navigate(['/reports']);
-      },
-      error: (err) => {
-        console.error(err);
-        this.errorMessage =
-          'ログインに失敗しました。社員番号またはパスワードを確認してください。';
-      },
-    });
-  }
 }

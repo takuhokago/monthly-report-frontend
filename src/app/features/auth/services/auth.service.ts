@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, tap, map, catchError, switchMap } from 'rxjs';
 import { LoginRequest } from '../models/login-request.dto';
-import { LoginResponse } from '../models/login-response.dto';
-import { map, catchError } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment'; // ← 相対パスに修正
+import { environment } from '../../../../environments/environment';
+
+export interface UserInfo {
+  code: string;
+  name: string;
+  role: string;
+  email: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -12,32 +17,33 @@ import { environment } from '../../../../environments/environment'; // ← 相�
 export class AuthService {
   private readonly API_BASE = `${environment.apiBaseUrl}/auth`;
 
-  private currentUser: LoginResponse | null = null;
+  private currentUser: UserInfo | null = null;
 
-  constructor(private http: HttpClient) {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      this.currentUser = JSON.parse(storedUser);
-    }
+  constructor(private http: HttpClient) {}
+
+  login(credentials: LoginRequest): Observable<UserInfo> {
+    return this.http
+      .post(`${this.API_BASE}/login`, credentials, { withCredentials: true })
+      .pipe(
+        // login後に/meを呼ぶことでユーザー情報を取得
+        switchMap(() => this.fetchMe())
+      );
   }
 
-  login(credentials: LoginRequest): Observable<LoginResponse> {
+  fetchMe(): Observable<UserInfo> {
     return this.http
-      .post<LoginResponse>(`${this.API_BASE}/login`, credentials, {
-        withCredentials: true,
-      })
+      .get<UserInfo>(`${this.API_BASE}/me`, { withCredentials: true })
       .pipe(
-        map((response) => {
-          this.currentUser = response;
-          localStorage.setItem('currentUser', JSON.stringify(response));
-          return response;
+        tap((user) => (this.currentUser = user)),
+        catchError((err) => {
+          this.currentUser = null;
+          return of(null as any);
         })
       );
   }
 
   logout(): Observable<any> {
     this.currentUser = null;
-    localStorage.removeItem('currentUser');
     return this.http.post(
       `${this.API_BASE}/logout`,
       {},
@@ -48,23 +54,21 @@ export class AuthService {
     );
   }
 
-  getCurrentUser(): LoginResponse | null {
+  getCurrentUser(): UserInfo | null {
     return this.currentUser;
   }
 
   isLoggedIn(): Observable<boolean> {
-    return this.http
-      .get(`${this.API_BASE}/me`, {
-        withCredentials: true,
-      })
-      .pipe(
-        map(() => true),
-        catchError(() => of(false))
-      );
+    return this.http.get(`${this.API_BASE}/me`, { withCredentials: true }).pipe(
+      tap(() => (this.currentUser = this.currentUser)), // 更新は省略
+      map(() => true),
+      catchError(() => of(false))
+    );
   }
 
   isAdmin(): boolean {
-    const role = this.currentUser?.role;
-    return role === '管理者' || role === 'ADMIN';
+    return (
+      this.currentUser?.role === '管理者' || this.currentUser?.role === 'ADMIN'
+    );
   }
 }
