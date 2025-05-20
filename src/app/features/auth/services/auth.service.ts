@@ -1,15 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, tap, map, catchError, switchMap } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { tap, map, catchError } from 'rxjs/operators';
 import { LoginRequest } from '../models/login-request.dto';
+import { LoginResponse } from '../models/login-response.dto';
 import { environment } from '../../../../environments/environment';
-
-export interface UserInfo {
-  code: string;
-  name: string;
-  role: string;
-  email: string;
-}
+import { EmployeeDto } from '../../employees/models/employee.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -17,25 +13,38 @@ export interface UserInfo {
 export class AuthService {
   private readonly API_BASE = `${environment.apiBaseUrl}/auth`;
 
-  private currentUser: UserInfo | null = null;
+  private currentUser: EmployeeDto | null = null;
 
   constructor(private http: HttpClient) {}
 
-  login(credentials: LoginRequest): Observable<UserInfo> {
+  login(credentials: LoginRequest): Observable<EmployeeDto> {
     return this.http
-      .post(`${this.API_BASE}/login`, credentials, { withCredentials: true })
+      .post<LoginResponse>(`${this.API_BASE}/login`, credentials, {
+        withCredentials: true,
+      })
       .pipe(
-        // login後に/meを呼ぶことでユーザー情報を取得
-        switchMap(() => this.fetchMe())
+        tap((res) => {
+          // LoginResponse → EmployeeDto に変換して保持
+          this.currentUser = {
+            code: res.code,
+            lastName: '', // name しかないので空にしておく
+            firstName: '',
+            fullName: res.name,
+            email: res.email,
+            role: res.role,
+            departmentName: res.department,
+          };
+        }),
+        map(() => this.currentUser as EmployeeDto)
       );
   }
 
-  fetchMe(): Observable<UserInfo> {
+  fetchMe(): Observable<EmployeeDto> {
     return this.http
-      .get<UserInfo>(`${this.API_BASE}/me`, { withCredentials: true })
+      .get<EmployeeDto>(`${this.API_BASE}/me`, { withCredentials: true })
       .pipe(
         tap((user) => (this.currentUser = user)),
-        catchError((err) => {
+        catchError(() => {
           this.currentUser = null;
           return of(null as any);
         })
@@ -54,13 +63,13 @@ export class AuthService {
     );
   }
 
-  getCurrentUser(): UserInfo | null {
+  getCurrentUser(): EmployeeDto | null {
     return this.currentUser;
   }
 
   isLoggedIn(): Observable<boolean> {
     return this.http.get(`${this.API_BASE}/me`, { withCredentials: true }).pipe(
-      tap(() => (this.currentUser = this.currentUser)), // 更新は省略
+      tap(() => {}),
       map(() => true),
       catchError(() => of(false))
     );
