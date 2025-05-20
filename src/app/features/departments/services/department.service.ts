@@ -14,16 +14,22 @@ export class DepartmentService {
 
   // 所属一覧取得
   getAll(): Observable<DepartmentDto[]> {
-    return this.http.get<DepartmentDto[]>(this.baseUrl);
+    return this.http.get<DepartmentDto[]>(this.baseUrl, {
+      withCredentials: true,
+    });
   }
 
   // 所属追加
   create(department: Partial<DepartmentDto>): Observable<DepartmentDto> {
-    return this.http.post<DepartmentDto>(this.baseUrl, department);
+    return this.http.post<DepartmentDto>(this.baseUrl, department, {
+      withCredentials: true,
+    });
   }
 
   // 所属削除
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+    return this.http.delete<void>(`${this.baseUrl}/${id}`, {
+      withCredentials: true,
+    });
   }
 }
