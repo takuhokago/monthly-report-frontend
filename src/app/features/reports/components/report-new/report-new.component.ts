@@ -13,7 +13,13 @@ import { ButtonComponent } from '../../../../shared/button/button.component';
 @Component({
   standalone: true,
   selector: 'app-report-new',
-  imports: [CommonModule, FormsModule, CharCountComponent, RouterLink, ButtonComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    CharCountComponent,
+    RouterLink,
+    ButtonComponent,
+  ],
   templateUrl: './report-new.component.html',
 })
 export class ReportNewComponent {
@@ -50,8 +56,8 @@ export class ReportNewComponent {
     const user = this.authService.getCurrentUser();
     if (user) {
       this.report.employeeCode = user.code;
-      this.report.employeeName = user.name;
-      this.report.departmentName = user.department;
+      this.report.employeeName = user.fullName;
+      this.report.departmentName = user.departmentName;
     }
   }
 

@@ -29,7 +29,6 @@ export class HeaderComponent {
   }
 
   get userName(): string | null {
-  return this.authService.getCurrentUser()?.name || null;
-}
-
+    return this.authService.getCurrentUser()?.fullName || null;
+  }
 }
