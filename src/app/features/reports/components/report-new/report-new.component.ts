@@ -56,8 +56,8 @@ export class ReportNewComponent {
     const user = this.authService.getCurrentUser();
     if (user) {
       this.report.employeeCode = user.code;
-      this.report.employeeName = user.fullName;
-      this.report.departmentName = user.departmentName;
+      this.report.employeeName = user.name;
+      this.report.departmentName = user.department;
     }
   }
 

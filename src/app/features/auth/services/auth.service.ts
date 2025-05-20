@@ -5,7 +5,6 @@ import { tap, map, catchError } from 'rxjs/operators';
 import { LoginRequest } from '../models/login-request.dto';
 import { LoginResponse } from '../models/login-response.dto';
 import { environment } from '../../../../environments/environment';
-import { EmployeeDto } from '../../employees/models/employee.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -13,35 +12,21 @@ import { EmployeeDto } from '../../employees/models/employee.dto';
 export class AuthService {
   private readonly API_BASE = `${environment.apiBaseUrl}/auth`;
 
-  private currentUser: EmployeeDto | null = null;
+  private currentUser: LoginResponse | null = null;
 
   constructor(private http: HttpClient) {}
 
-  login(credentials: LoginRequest): Observable<EmployeeDto> {
+  login(credentials: LoginRequest): Observable<LoginResponse> {
     return this.http
       .post<LoginResponse>(`${this.API_BASE}/login`, credentials, {
         withCredentials: true,
       })
-      .pipe(
-        tap((res) => {
-          // LoginResponse → EmployeeDto に変換して保持
-          this.currentUser = {
-            code: res.code,
-            lastName: '', // name しかないので空にしておく
-            firstName: '',
-            fullName: res.name,
-            email: res.email,
-            role: res.role,
-            departmentName: res.department,
-          };
-        }),
-        map(() => this.currentUser as EmployeeDto)
-      );
+      .pipe(tap((res) => (this.currentUser = res)));
   }
 
-  fetchMe(): Observable<EmployeeDto> {
+  fetchMe(): Observable<LoginResponse> {
     return this.http
-      .get<EmployeeDto>(`${this.API_BASE}/me`, { withCredentials: true })
+      .get<LoginResponse>(`${this.API_BASE}/me`, { withCredentials: true })
       .pipe(
         tap((user) => (this.currentUser = user)),
         catchError(() => {
@@ -63,13 +48,12 @@ export class AuthService {
     );
   }
 
-  getCurrentUser(): EmployeeDto | null {
+  getCurrentUser(): LoginResponse | null {
     return this.currentUser;
   }
 
   isLoggedIn(): Observable<boolean> {
     return this.http.get(`${this.API_BASE}/me`, { withCredentials: true }).pipe(
-      tap(() => {}),
       map(() => true),
       catchError(() => of(false))
     );
