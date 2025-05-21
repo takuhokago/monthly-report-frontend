@@ -10,6 +10,7 @@ import { NgForm, NgModel } from '@angular/forms';
 import { CharCountComponent } from '../../../../shared/char-count/char-count.component';
 import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/button/button.component';
+import { EmployeeService } from '../../../employees/services/employee.service';
 @Component({
   standalone: true,
   selector: 'app-report-new',
@@ -51,13 +52,24 @@ export class ReportNewComponent {
   constructor(
     private reportService: ReportService,
     private router: Router,
-    private authService: AuthService
-  ) {
+    private authService: AuthService,
+    private employeeService: EmployeeService
+  ) {}
+
+  ngOnInit(): void {
     const user = this.authService.getCurrentUser();
     if (user) {
       this.report.employeeCode = user.code;
-      this.report.employeeName = user.name;
-      this.report.departmentName = user.department;
+      // 👇 user.codeを使ってEmployee情報を取得
+      this.employeeService.getByCode(user.code).subscribe({
+        next: (employee) => {
+          this.report.employeeName = employee.fullName ?? '';
+          this.report.departmentName = employee.departmentName ?? '';
+        },
+        error: (err) => {
+          console.error('社員情報の取得に失敗しました', err);
+        },
+      });
     }
   }
 
