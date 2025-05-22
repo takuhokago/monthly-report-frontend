@@ -77,9 +77,18 @@ export class ReportService {
     );
   }
 
-  // 🔽 追加：直近の報告書を取得する
+  // 直近の報告書を取得する
   getLatestReport(): Observable<ReportDto> {
     return this.http.get<ReportDto>(`${this.API_URL}/latest`, {
+      withCredentials: true,
+    });
+  }
+
+  // 追加：報告書をExcelとしてダウンロード
+  downloadReportExcel(reportId: string): Observable<Blob> {
+    return this.http.post(`${this.API_URL}/export`, null, {
+      params: { reportId },
+      responseType: 'blob',
       withCredentials: true,
     });
   }

@@ -100,4 +100,16 @@ export class ReportDetailComponent {
       this.commentText = initialComment || '';
     }
   }
+
+  onExportExcel(reportId: number): void {
+    this.reportService
+      .downloadReportExcel(reportId.toString())
+      .subscribe((blob) => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'report.xlsx';
+        link.click();
+        URL.revokeObjectURL(link.href);
+      });
+  }
 }

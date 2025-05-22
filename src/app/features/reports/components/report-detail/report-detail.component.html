@@ -34,6 +34,12 @@
         (click)="toggleCommentForm(report.comment)"
         [block]="true"
       ></app-button>
+      <app-button
+        label="Excel出力"
+        color="success"
+        (click)="onExportExcel(report.id)"
+        [block]="true"
+      ></app-button>
     </div>
 
     <!-- コメント入力フォーム -->
