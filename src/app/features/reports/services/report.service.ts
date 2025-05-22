@@ -76,4 +76,11 @@ export class ReportService {
       { withCredentials: true }
     );
   }
+
+  // 🔽 追加：直近の報告書を取得する
+  getLatestReport(): Observable<ReportDto> {
+    return this.http.get<ReportDto>(`${this.API_URL}/latest`, {
+      withCredentials: true,
+    });
+  }
 }

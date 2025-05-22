@@ -8,12 +8,26 @@
     <div
       class="col-12 col-md-6 d-flex flex-column flex-md-row align-items-md-center justify-content-md-end"
     >
+      <!-- ✅ チェックボックス -->
+      <div class="form-check me-md-3 mb-2 mb-md-0">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="useLatest"
+          [(ngModel)]="useLatest"
+          name="useLatest"
+        />
+        <label class="form-check-label" for="useLatest">
+          直近の報告書を引き継ぐ
+        </label>
+      </div>
       <app-button
         label="＋ 新規作成"
         color="primary"
         size="sm"
         [block]="true"
-        routerLink="/reports/new"
+        [routerLink]="'/reports/new'"
+        [queryParams]="{ useLatest: useLatest }"
         class="me-md-3 mb-2 mb-md-0"
       />
 

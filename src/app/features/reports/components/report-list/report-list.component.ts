@@ -25,6 +25,8 @@ export class ReportListComponent implements OnInit {
   reportMonthList: string[] = [];
   selectedMonth: string = '';
   loading: boolean = true;
+  useLatest = false;
+
 
   constructor(private reportService: ReportService) {}
 

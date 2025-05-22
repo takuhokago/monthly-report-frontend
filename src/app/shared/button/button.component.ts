@@ -15,4 +15,5 @@ export class ButtonComponent {
   @Input() color: 'primary' | 'secondary' | 'success' | 'danger' = 'primary';
   @Input() block: boolean = false;
   @Input() routerLink?: string; // ナビゲーション対応
+  @Input() queryParams?: { [key: string]: any };
 }

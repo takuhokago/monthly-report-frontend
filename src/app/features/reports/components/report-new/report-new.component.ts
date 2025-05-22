@@ -11,6 +11,7 @@ import { CharCountComponent } from '../../../../shared/char-count/char-count.com
 import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/button/button.component';
 import { EmployeeService } from '../../../employees/services/employee.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   standalone: true,
   selector: 'app-report-new',
@@ -24,6 +25,8 @@ import { EmployeeService } from '../../../employees/services/employee.service';
   templateUrl: './report-new.component.html',
 })
 export class ReportNewComponent {
+  useLatest: boolean = false;
+
   report: ReportCreateRequest = {
     reportMonth: '',
     contentBusiness: '',
@@ -53,18 +56,26 @@ export class ReportNewComponent {
     private reportService: ReportService,
     private router: Router,
     private authService: AuthService,
-    private employeeService: EmployeeService
+    private employeeService: EmployeeService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    const useLatestParam = this.route.snapshot.queryParamMap.get('useLatest');
+    this.useLatest = useLatestParam === 'true';
+
     const user = this.authService.getCurrentUser();
     if (user) {
       this.report.employeeCode = user.code;
-      // 👇 user.codeを使ってEmployee情報を取得
+
       this.employeeService.getByCode(user.code).subscribe({
         next: (employee) => {
           this.report.employeeName = employee.fullName ?? '';
           this.report.departmentName = employee.departmentName ?? '';
+
+          if (this.useLatest) {
+            this.loadLatestReport();
+          }
         },
         error: (err) => {
           console.error('社員情報の取得に失敗しました', err);
@@ -107,6 +118,55 @@ export class ReportNewComponent {
       error: (err) => {
         console.error('登録失敗:', err);
         alert('登録に失敗しました。');
+      },
+    });
+  }
+
+  private loadLatestReport(): void {
+    this.reportService.getLatestReport().subscribe({
+      next: (latest: ReportDto) => {
+        if (latest) {
+          const {
+            reportMonth,
+            contentBusiness,
+            timeWorked,
+            timeOver,
+            rateBusiness,
+            rateStudy,
+            trendBusiness,
+            contentMember,
+            contentCustomer,
+            contentProblem,
+            evaluationBusiness,
+            evaluationStudy,
+            goalBusiness,
+            goalStudy,
+            contentCompany,
+            contentOthers,
+          } = latest;
+
+          Object.assign(this.report, {
+            reportMonth,
+            contentBusiness,
+            timeWorked,
+            timeOver,
+            rateBusiness,
+            rateStudy,
+            trendBusiness,
+            contentMember,
+            contentCustomer,
+            contentProblem,
+            evaluationBusiness,
+            evaluationStudy,
+            goalBusiness,
+            goalStudy,
+            contentCompany,
+            contentOthers,
+          });
+        }
+      },
+      error: (err) => {
+        console.error('直近の報告書取得に失敗しました', err);
       },
     });
   }
