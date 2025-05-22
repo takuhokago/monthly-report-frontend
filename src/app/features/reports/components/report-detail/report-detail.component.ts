@@ -102,14 +102,28 @@ export class ReportDetailComponent {
   }
 
   onExportExcel(reportId: number): void {
-    this.reportService
-      .downloadReportExcel(reportId.toString())
-      .subscribe((blob) => {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'report.xlsx';
-        link.click();
-        URL.revokeObjectURL(link.href);
-      });
+    this.reportService.downloadReportExcel(reportId).subscribe((res) => {
+      const blob = res.body!;
+      const contentDisposition = res.headers.get('Content-Disposition');
+      const filename =
+        this.extractFilename(contentDisposition) || 'report.xlsx';
+
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    });
+  }
+
+  private extractFilename(contentDisposition: string | null): string | null {
+    if (!contentDisposition) return null;
+
+    const filenameRegex = /filename\*?=(?:UTF-8''|")(.*?)(?:\"|$)/;
+    const match = filenameRegex.exec(contentDisposition);
+    if (match && match[1]) {
+      return decodeURIComponent(match[1]);
+    }
+    return null;
   }
 }

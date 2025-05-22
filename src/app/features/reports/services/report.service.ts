@@ -8,6 +8,7 @@ import {
   ReportResponse,
 } from '../models/report.dto';
 import { environment } from '../../../../environments/environment';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -85,10 +86,11 @@ export class ReportService {
   }
 
   // 追加：報告書をExcelとしてダウンロード
-  downloadReportExcel(reportId: string): Observable<Blob> {
+  downloadReportExcel(reportId: number): Observable<HttpResponse<Blob>> {
     return this.http.post(`${this.API_URL}/export`, null, {
       params: { reportId },
       responseType: 'blob',
+      observe: 'response', // ヘッダー取得のために必要
       withCredentials: true,
     });
   }
