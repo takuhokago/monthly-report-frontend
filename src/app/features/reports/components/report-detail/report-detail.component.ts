@@ -119,11 +119,20 @@ export class ReportDetailComponent {
   private extractFilename(contentDisposition: string | null): string | null {
     if (!contentDisposition) return null;
 
-    const filenameRegex = /filename\*?=(?:UTF-8''|")(.*?)(?:\"|$)/;
-    const match = filenameRegex.exec(contentDisposition);
-    if (match && match[1]) {
-      return decodeURIComponent(match[1]);
+    // filename*=UTF-8''xxx.xlsx を優先
+    const utf8FilenameRegex = /filename\*=UTF-8''(.+?)(?:;|$)/i;
+    const fallbackFilenameRegex = /filename="(.+?)"/i;
+
+    const utf8Match = utf8FilenameRegex.exec(contentDisposition);
+    if (utf8Match && utf8Match[1]) {
+      return decodeURIComponent(utf8Match[1]);
     }
+
+    const fallbackMatch = fallbackFilenameRegex.exec(contentDisposition);
+    if (fallbackMatch && fallbackMatch[1]) {
+      return fallbackMatch[1];
+    }
+
     return null;
   }
 }
