@@ -85,7 +85,7 @@ export class ReportService {
     });
   }
 
-  // 追加：報告書をExcelとしてダウンロード
+  // 報告書をExcelとしてダウンロード
   downloadReportExcel(reportId: number): Observable<HttpResponse<Blob>> {
     return this.http.post(`${this.API_URL}/export`, null, {
       params: { reportId },
