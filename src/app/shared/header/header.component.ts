@@ -3,6 +3,8 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../features/auth/services/auth.service';
 import { CommonModule } from '@angular/common';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-header',
   standalone: true,
@@ -30,5 +32,15 @@ export class HeaderComponent {
 
   get userName(): string | null {
     return this.authService.getCurrentUser()?.name || null;
+  }
+
+  closeNavbar(): void {
+    const navbar = document.getElementById('navbarNav');
+    if (navbar) {
+      const collapseInstance = bootstrap.Collapse.getInstance(navbar);
+      if (collapseInstance) {
+        collapseInstance.hide(); // メニューを閉じる
+      }
+    }
   }
 }
