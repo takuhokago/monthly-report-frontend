@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './shared/header/header.component';
 import { CommonModule } from '@angular/common';
+import { AuthService } from './features/auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -16,12 +17,16 @@ export class AppComponent {
   title = 'monthly-report-frontend';
   showHeader = signal(true);
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private authService: AuthService) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event) => {
         const nav = event as NavigationEnd; // キャストが必要
         this.showHeader.set(!nav.urlAfterRedirects.startsWith('/login'));
       });
+  }
+
+  ngOnInit(): void {
+    this.authService.fetchMe().subscribe();
   }
 }
