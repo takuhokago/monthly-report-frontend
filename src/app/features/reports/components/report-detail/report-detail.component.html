@@ -10,24 +10,30 @@
         [routerLink]="'/reports'"
         [block]="true"
       ></app-button>
-      <app-button
-        label="編集"
-        color="primary"
-        [routerLink]="'/reports/' + report.id + '/edit'"
-        [block]="true"
-      ></app-button>
-      <app-button
-        label="削除"
-        color="danger"
-        (click)="onDelete(report.id)"
-        [block]="true"
-      ></app-button>
+
+      <ng-container *ngIf="canEditOrDelete(report)">
+        <app-button
+          label="編集"
+          color="primary"
+          [routerLink]="'/reports/' + report.id + '/edit'"
+          [block]="true"
+        ></app-button>
+        <app-button
+          label="削除"
+          color="danger"
+          (click)="onDelete(report.id)"
+          [block]="true"
+        ></app-button>
+      </ng-container>
+
       <app-button
         label="承認処理"
         color="success"
         (click)="onApprove(report.id)"
         [block]="true"
+        *ngIf="canApprove()"
       ></app-button>
+
       <app-button
         [label]="isCommentFormVisible ? 'キャンセル' : 'コメント追加'"
         color="secondary"

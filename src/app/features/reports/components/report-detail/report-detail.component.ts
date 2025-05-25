@@ -8,6 +8,7 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CharCountComponent } from '../../../../shared/char-count/char-count.component';
 import { ButtonComponent } from '../../../../shared/button/button.component';
+import { AuthService } from '../../../auth/services/auth.service';
 
 @Component({
   standalone: true,
@@ -22,16 +23,17 @@ import { ButtonComponent } from '../../../../shared/button/button.component';
   templateUrl: './report-detail.component.html',
 })
 export class ReportDetailComponent {
-  private route = inject(ActivatedRoute);
-  private reportService = inject(ReportService);
-  private router = inject(Router);
-
   report$!: Observable<ReportDto>;
 
   isCommentFormVisible = false;
   commentText = '';
 
-  constructor() {
+  constructor(
+    private route: ActivatedRoute,
+    private reportService: ReportService,
+    private router: Router,
+    private authService: AuthService
+  ) {
     this.loadReport();
   }
 
@@ -135,4 +137,19 @@ export class ReportDetailComponent {
 
     return null;
   }
+
+  canEditOrDelete(report: ReportDto): boolean {
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) return false;
+
+    // 管理者 または 報告書作成者（名前一致）
+    return (
+      this.authService.isAdmin() || report.employeeName === currentUser.name
+    );
+  }
+
+  canApprove(): boolean {
+  return this.authService.isAdmin();
+}
+
 }
