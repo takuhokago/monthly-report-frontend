@@ -37,7 +37,7 @@ export class ReportNewComponent {
     trendBusiness: 0,
     contentMember: '',
     contentCustomer: '',
-    contentProblem: '',
+    contentProblem: '【問題点】\n【解決策】\n【ヒヤリハット】',
     evaluationBusiness: '',
     evaluationStudy: '',
     goalBusiness: '',

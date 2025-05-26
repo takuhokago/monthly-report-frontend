@@ -144,6 +144,13 @@
           {{ report.contentCustomer }}
         </div>
       </div>
+
+      <div class="mb-3">
+        <label class="form-label">作業における問題点と解決策</label>
+        <div class="form-control bg-light" style="white-space: pre-wrap">
+          {{ report.contentProblem }}
+        </div>
+      </div>
     </div>
 
     <!-- 勤務・残業・達成率 -->
@@ -163,6 +170,10 @@
       <div class="col-md-3">
         <label class="form-label">学習目標達成率</label>
         <div class="form-control bg-light">{{ report.rateStudy }} %</div>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label">業務量推移</label>
+        <div class="form-control bg-light">{{ report.trendBusiness }} %</div>
       </div>
     </div>
 

@@ -127,9 +127,32 @@
           800文字以内で入力してください。
         </div>
       </div>
+
+      <!-- 作業における問題点と解決策 -->
+      <div class="mb-3">
+        <label for="contentProblem" class="form-label"
+          >作業における問題点と解決策</label
+        >
+        <textarea
+          id="contentProblem"
+          rows="8"
+          class="form-control"
+          [(ngModel)]="report.contentProblem"
+          name="contentProblem"
+          maxlength="800"
+          #contentProblemInput="ngModel"
+        ></textarea>
+        <app-char-count [value]="report.contentProblem" [max]="800" />
+        <div
+          *ngIf="contentProblemInput.invalid && contentProblemInput.touched"
+          class="form-text text-danger"
+        >
+          800文字以内で入力してください。
+        </div>
+      </div>
     </div>
 
-    <!-- 勤務・残業・達成率 -->
+    <!-- 勤務・残業 -->
     <div class="row g-3 mb-4">
       <!-- 勤務時間 -->
       <div class="col-md-3">
@@ -145,7 +168,6 @@
             max="200"
             required
             #timeWorkedInput="ngModel"
-            #fieldRef
           />
           <span class="input-group-text">時間</span>
         </div>
@@ -181,23 +203,31 @@
           残業時間を入力してください（0～200時間）。
         </div>
       </div>
+    </div>
 
+    <!-- 達成率・業務量推移 -->
+    <div class="row g-3 mb-5 mt-3">
       <!-- 業務目標達成率 -->
-      <div class="col-md-3">
+      <div class="col-md-4">
         <label for="rateBusiness" class="form-label">業務目標達成率</label>
-        <div class="input-group">
-          <input
-            type="number"
-            class="form-control"
-            id="rateBusiness"
-            [(ngModel)]="report.rateBusiness"
-            name="rateBusiness"
-            min="0"
-            max="100"
-            required
-            #rateBusinessInput="ngModel"
-          />
-          <span class="input-group-text">%</span>
+        <input
+          type="range"
+          class="form-range"
+          id="rateBusiness"
+          [(ngModel)]="report.rateBusiness"
+          name="rateBusiness"
+          min="0"
+          max="100"
+          step="5"
+          required
+          #rateBusinessInput="ngModel"
+        />
+        <div class="d-flex justify-content-between">
+          <small>0%</small>
+          <small>100%</small>
+        </div>
+        <div class="mt-2">
+          現在の達成率: <strong>{{ report.rateBusiness }}%</strong>
         </div>
         <div
           *ngIf="rateBusinessInput.invalid && rateBusinessInput.touched"
@@ -208,24 +238,59 @@
       </div>
 
       <!-- 学習目標達成率 -->
-      <div class="col-md-3">
+      <div class="col-md-4">
         <label for="rateStudy" class="form-label">学習目標達成率</label>
-        <div class="input-group">
-          <input
-            type="number"
-            class="form-control"
-            id="rateStudy"
-            [(ngModel)]="report.rateStudy"
-            name="rateStudy"
-            min="0"
-            max="100"
-            required
-            #rateStudyInput="ngModel"
-          />
-          <span class="input-group-text">%</span>
+        <input
+          type="range"
+          class="form-range"
+          id="rateStudy"
+          [(ngModel)]="report.rateStudy"
+          name="rateStudy"
+          min="0"
+          max="100"
+          step="5"
+          required
+          #rateStudyInput="ngModel"
+        />
+        <div class="d-flex justify-content-between">
+          <small>0%</small>
+          <small>100%</small>
+        </div>
+        <div class="mt-2">
+          現在の達成率: <strong>{{ report.rateStudy }}%</strong>
         </div>
         <div
           *ngIf="rateStudyInput.invalid && rateStudyInput.touched"
+          class="form-text text-danger"
+        >
+          0〜100%の達成率を入力してください。
+        </div>
+      </div>
+
+      <!-- 業務量推移 -->
+      <div class="col-md-4">
+        <label for="trendBusiness" class="form-label">業務量推移</label>
+        <input
+          type="range"
+          class="form-range"
+          id="trendBusiness"
+          [(ngModel)]="report.trendBusiness"
+          name="trendBusiness"
+          min="0"
+          max="200"
+          step="5"
+          required
+          #trendBusinessInput="ngModel"
+        />
+        <div class="d-flex justify-content-between">
+          <small>0%</small>
+          <small>100%</small>
+        </div>
+        <div class="mt-2">
+          現在の推移値: <strong>{{ report.trendBusiness }}%</strong>
+        </div>
+        <div
+          *ngIf="trendBusinessInput.invalid && trendBusinessInput.touched"
           class="form-text text-danger"
         >
           0〜100%の達成率を入力してください。
