@@ -117,7 +117,12 @@ export class ReportNewComponent {
       },
       error: (err) => {
         console.error('登録失敗:', err);
-        alert('登録に失敗しました。');
+
+        // サーバーからのエラーメッセージがある場合は表示
+        const message =
+          err?.error?.message ?? '登録に失敗しました。もう一度お試しください。';
+
+        alert(message);
       },
     });
   }
