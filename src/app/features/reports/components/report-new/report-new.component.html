@@ -285,6 +285,7 @@
         <div class="d-flex justify-content-between">
           <small>0%</small>
           <small>100%</small>
+          <small class="text-danger fw-bold">200%</small>
         </div>
         <div class="mt-2">
           現在の推移値: <strong>{{ report.trendBusiness }}%</strong>
@@ -293,7 +294,7 @@
           *ngIf="trendBusinessInput.invalid && trendBusinessInput.touched"
           class="form-text text-danger"
         >
-          0〜100%の達成率を入力してください。
+          0〜200%の値を入力してください。
         </div>
       </div>
     </div>
