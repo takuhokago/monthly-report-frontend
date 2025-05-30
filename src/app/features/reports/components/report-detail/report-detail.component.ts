@@ -27,6 +27,10 @@ export class ReportDetailComponent {
 
   isCommentFormVisible = false;
   commentText = '';
+  timeWorkedHour: number = 0;
+  timeWorkedMinute: number = 0;
+  timeOverHour: number = 0;
+  timeOverMinute: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,9 +43,19 @@ export class ReportDetailComponent {
 
   loadReport(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
-    this.report$ = this.reportService
-      .getReportById(id, true) // ← ここでキャッシュを無視
-      .pipe(map((res) => res.report));
+    this.report$ = this.reportService.getReportById(id, true).pipe(
+      map((res) => {
+        const report = res.report;
+
+        // 分 → 時間＋分
+        this.timeWorkedHour = Math.floor(report.timeWorked / 60);
+        this.timeWorkedMinute = report.timeWorked % 60;
+        this.timeOverHour = Math.floor(report.timeOver / 60);
+        this.timeOverMinute = report.timeOver % 60;
+
+        return report;
+      })
+    );
   }
 
   onDelete(id: number): void {
@@ -149,7 +163,6 @@ export class ReportDetailComponent {
   }
 
   canApprove(): boolean {
-  return this.authService.isAdmin();
-}
-
+    return this.authService.isAdmin();
+  }
 }

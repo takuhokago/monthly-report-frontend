@@ -26,6 +26,10 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ReportNewComponent {
   useLatest: boolean = false;
+  timeWorkedHour: number = 0;
+  timeWorkedMinute: number = 0;
+  timeOverHour: number = 0;
+  timeOverMinute: number = 0;
 
   report: ReportCreateRequest = {
     reportMonth: '',
@@ -109,6 +113,10 @@ export class ReportNewComponent {
       return;
     }
 
+    // 分単位に変換して本体に代入
+    this.report.timeWorked = this.timeWorkedHour * 60 + this.timeWorkedMinute;
+    this.report.timeOver = this.timeOverHour * 60 + this.timeOverMinute;
+
     // フォームが有効な場合は登録処理
     this.reportService.createReport(this.report).subscribe({
       next: (res) => {
@@ -168,6 +176,12 @@ export class ReportNewComponent {
             contentCompany,
             contentOthers,
           });
+
+          // 既存の値（分）→ 時間＋分 に変換
+          this.timeWorkedHour = Math.floor(this.report.timeWorked / 60);
+          this.timeWorkedMinute = this.report.timeWorked % 60;
+          this.timeOverHour = Math.floor(this.report.timeOver / 60);
+          this.timeOverMinute = this.report.timeOver % 60;
         }
       },
       error: (err) => {

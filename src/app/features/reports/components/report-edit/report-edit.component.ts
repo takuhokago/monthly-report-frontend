@@ -25,6 +25,10 @@ import { NgForm } from '@angular/forms';
 export class ReportEditComponent implements OnInit {
   reportId!: string;
   report: ReportDto = {} as ReportDto;
+  timeWorkedHour: number = 0;
+  timeWorkedMinute: number = 0;
+  timeOverHour: number = 0;
+  timeOverMinute: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,6 +41,12 @@ export class ReportEditComponent implements OnInit {
     this.reportService.getReportById(this.reportId, true).subscribe({
       next: (res) => {
         this.report = res.report;
+
+        // 既存の値（分）→ 時間＋分 に変換
+        this.timeWorkedHour = Math.floor(this.report.timeWorked / 60);
+        this.timeWorkedMinute = this.report.timeWorked % 60;
+        this.timeOverHour = Math.floor(this.report.timeOver / 60);
+        this.timeOverMinute = this.report.timeOver % 60;
       },
       error: (err) => {
         console.error('取得失敗:', err);
@@ -49,6 +59,10 @@ export class ReportEditComponent implements OnInit {
       form.control.markAllAsTouched();
       return;
     }
+
+    // 分単位に変換して本体に代入
+    this.report.timeWorked = this.timeWorkedHour * 60 + this.timeWorkedMinute;
+    this.report.timeOver = this.timeOverHour * 60 + this.timeOverMinute;
 
     this.reportService.updateReport(this.reportId, this.report).subscribe({
       next: (res) => {

@@ -157,51 +157,87 @@
     <div class="row g-3 mb-4">
       <!-- 勤務時間 -->
       <div class="col-md-3">
-        <label for="timeWorked" class="form-label">勤務時間</label>
+        <label class="form-label">勤務時間</label>
         <div class="input-group">
+          <!-- 時間入力 -->
           <input
             type="number"
             class="form-control"
-            id="timeWorked"
-            [(ngModel)]="report.timeWorked"
-            name="timeWorked"
+            [(ngModel)]="timeWorkedHour"
+            name="timeWorkedHour"
             min="0"
-            max="200"
+            max="199"
             required
-            #timeWorkedInput="ngModel"
+            #timeWorkedHourInput="ngModel"
           />
           <span class="input-group-text">時間</span>
+
+          <!-- 分入力 -->
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="timeWorkedMinute"
+            name="timeWorkedMinute"
+            min="0"
+            max="59"
+            required
+            #timeWorkedMinuteInput="ngModel"
+          />
+          <span class="input-group-text">分</span>
         </div>
+
+        <!-- バリデーション -->
         <div
-          *ngIf="timeWorkedInput.invalid && timeWorkedInput.touched"
+          *ngIf="
+            (timeWorkedHourInput.invalid && timeWorkedHourInput.touched) ||
+            (timeWorkedMinuteInput.invalid && timeWorkedMinuteInput.touched)
+          "
           class="form-text text-danger"
         >
-          勤務時間を入力してください（0～200時間）。
+          勤務時間を入力してください（0~199時間）。
         </div>
       </div>
 
       <!-- 残業時間 -->
       <div class="col-md-3">
-        <label for="timeOver" class="form-label">残業時間</label>
+        <label class="form-label">残業時間</label>
         <div class="input-group">
+          <!-- 時間 -->
           <input
             type="number"
             class="form-control"
-            id="timeOver"
-            [(ngModel)]="report.timeOver"
-            name="timeOver"
+            [(ngModel)]="timeOverHour"
+            name="timeOverHour"
             min="0"
-            max="200"
+            max="199"
             required
-            #timeOverInput="ngModel"
+            #timeOverHourInput="ngModel"
           />
           <span class="input-group-text">時間</span>
+
+          <!-- 分 -->
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="timeOverMinute"
+            name="timeOverMinute"
+            min="0"
+            max="59"
+            required
+            #timeOverMinuteInput="ngModel"
+          />
+          <span class="input-group-text">分</span>
         </div>
+
+        <!-- バリデーション -->
         <div
-          *ngIf="timeOverInput.invalid && timeOverInput.touched"
+          *ngIf="
+            (timeOverHourInput.invalid && timeOverHourInput.touched) ||
+            (timeOverMinuteInput.invalid && timeOverMinuteInput.touched)
+          "
           class="form-text text-danger"
         >
-          残業時間を入力してください（0～200時間）。
+          残業時間を入力してください（0~199時間）。
         </div>
       </div>
     </div>
