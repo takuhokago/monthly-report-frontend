@@ -1,46 +1,45 @@
 <div class="container py-5">
   <h2 class="h3 mb-4 border-bottom pb-2">{{ userName }} さん</h2>
 
-  <!-- 表示切り替えボタン（左）・チェックボックス＋新規作成ボタン（右） -->
-  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+  <!-- 表示切り替え・チェックボックス・新規作成ボタン -->
+  <div class="d-flex flex-wrap gap-2 flex-md-row flex-column mt-4">
     <!-- 表示切り替えボタン -->
     <app-button
       [label]="showForm ? '編集を閉じる' : 'プロフィールを編集'"
       color="secondary"
       size="sm"
       (click)="showForm = !showForm"
-    />
+      [block]="true"
+    ></app-button>
 
-    <!-- チェックボックスと新規作成ボタン（右側に配置） -->
-    <div class="d-flex align-items-center gap-3 mt-2 mt-md-0">
-      <!-- チェックボックス -->
-      <div class="form-check m-0">
-        <input
-          type="checkbox"
-          class="form-check-input"
-          id="useLatest"
-          [(ngModel)]="useLatest"
-          name="useLatest"
-        />
-        <label class="form-check-label" for="useLatest">
-          直近の報告書を引き継ぐ
-        </label>
-      </div>
+    <!-- 新規作成ボタン -->
+    <app-button
+      label="＋ 新規作成"
+      color="primary"
+      size="sm"
+      [routerLink]="'/reports/new'"
+      [queryParams]="{ useLatest: useLatest }"
+      [block]="true"
+    ></app-button>
 
-      <!-- 新規作成ボタン -->
-      <app-button
-        label="＋ 新規作成"
-        color="primary"
-        size="sm"
-        [routerLink]="'/reports/new'"
-        [queryParams]="{ useLatest: useLatest }"
+    <!-- チェックボックス -->
+    <div class="form-check align-self-center ms-1">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="useLatest"
+        [(ngModel)]="useLatest"
+        name="useLatest"
       />
+      <label class="form-check-label" for="useLatest">
+        直近の報告書を引き継ぐ
+      </label>
     </div>
   </div>
 
-  <!-- 従業員編集フォーム -->
+  <!-- 編集フォーム -->
   <app-employee-edit *ngIf="showForm" [selfMode]="true"></app-employee-edit>
 
-  <!-- 自分の報告書一覧テーブル -->
+  <!-- 報告書テーブル -->
   <app-report-table [filterByUser]="true"></app-report-table>
 </div>
