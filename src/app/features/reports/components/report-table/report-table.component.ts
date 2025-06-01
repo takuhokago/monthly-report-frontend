@@ -28,7 +28,7 @@ export class ReportTableComponent implements OnInit {
       map((response) => {
         let reports = response.reportList;
         if (this.filterByUser && currentUser) {
-          return reports.filter(
+          reports = reports.filter(
             (r) => String(r.employeeCode) === currentUser.code
           );
         }
