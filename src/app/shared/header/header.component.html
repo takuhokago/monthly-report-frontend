@@ -16,17 +16,12 @@
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item d-flex align-items-center text-white px-2">
-          {{ userName }} さん
-        </li>
-
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="isAdmin">
           <a class="nav-link" routerLink="/reports" (click)="closeNavbar()"
             >報告書一覧</a
           >
         </li>
 
-        <!-- 管理者のみ表示 -->
         <li class="nav-item" *ngIf="isAdmin">
           <a class="nav-link" routerLink="/employees" (click)="closeNavbar()"
             >従業員一覧</a
@@ -40,7 +35,7 @@
 
         <li class="nav-item">
           <a class="nav-link" routerLink="/profile" (click)="closeNavbar()"
-            >プロフィール</a
+            >{{ userName }} さん</a
           >
         </li>
 

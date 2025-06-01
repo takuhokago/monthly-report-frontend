@@ -26,13 +26,15 @@ export class ReportTableComponent implements OnInit {
 
     this.reports$ = this.reportService.getReports().pipe(
       map((response) => {
-        const allReports = response.reportList;
+        let reports = response.reportList;
         if (this.filterByUser && currentUser) {
-          return allReports.filter(
+          return reports.filter(
             (r) => String(r.employeeCode) === currentUser.code
           );
         }
-        return allReports;
+        return reports.sort((a, b) =>
+          b.reportMonth.localeCompare(a.reportMonth)
+        );
       })
     );
   }

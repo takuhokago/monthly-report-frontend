@@ -12,6 +12,6 @@ export class AdminGuard implements CanActivate {
     if (this.authService.isAdmin()) {
       return true;
     }
-    return this.router.parseUrl('/reports'); // 管理者以外はリダイレクト
+    return this.router.parseUrl('/profile'); // 管理者以外はリダイレクト
   }
 }

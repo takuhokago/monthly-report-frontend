@@ -21,7 +21,7 @@ export const appRoutes: Routes = [
       import(
         './features/reports/components/report-list/report-list.component'
       ).then((m) => m.ReportListComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, AdminGuard],
   },
   {
     path: 'reports/new',
