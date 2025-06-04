@@ -41,5 +41,5 @@
   <app-employee-edit *ngIf="showForm" [selfMode]="true"></app-employee-edit>
 
   <!-- 報告書テーブル -->
-  <app-report-table [filterByUser]="true"></app-report-table>
+  <app-report-table *ngIf="!showForm" [filterByUser]="true"></app-report-table>
 </div>
