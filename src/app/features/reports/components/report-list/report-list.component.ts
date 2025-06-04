@@ -6,6 +6,14 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ButtonComponent } from '../../../../shared/button/button.component';
 import { SelectComponent } from '../../../../shared/select/select.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { ViewChild, AfterViewInit } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-report-list',
@@ -16,6 +24,11 @@ import { SelectComponent } from '../../../../shared/select/select.component';
     FormsModule,
     ButtonComponent,
     SelectComponent,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatIconModule,
+    MatButtonModule,
   ],
   templateUrl: './report-list.component.html',
   styleUrls: ['./report-list.component.scss'],
@@ -23,10 +36,23 @@ import { SelectComponent } from '../../../../shared/select/select.component';
 export class ReportListComponent implements OnInit {
   reports: ReportDto[] = [];
   reportMonthList: string[] = [];
-  selectedMonth: string = '';
   loading: boolean = true;
+  selectedMonth: string = '';
   useLatest = false;
+  displayedColumns: string[] = [
+    'employeeName',
+    'reportMonth',
+    'reportDeadline',
+    'submittedAt',
+    'departmentName',
+    'completeFlg',
+    'approvalFlg',
+    'comment',
+    'actions',
+  ];
+  @ViewChild(MatSort) sort!: MatSort;
 
+  dataSource = new MatTableDataSource<ReportDto>(this.filteredReports);
 
   constructor(private reportService: ReportService) {}
 
@@ -45,6 +71,7 @@ export class ReportListComponent implements OnInit {
           .sort()
           .reverse();
         this.selectedMonth = this.reportMonthList[0]; // 最新の月を初期選択
+        this.updateTableData();
         this.loading = false; // ローディング完了
       },
       error: (err) => {
@@ -52,6 +79,17 @@ export class ReportListComponent implements OnInit {
         this.loading = false; // エラー時もローディング完了
       },
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.dataSource.sort = this.sort;
+  }
+
+  updateTableData(): void {
+    this.dataSource.data = this.filteredReports;
+
+    // ソートを再度バインド（selectedMonth変更後にも必要）
+    this.dataSource.sort = this.sort;
   }
 
   get filteredReports(): ReportDto[] {
