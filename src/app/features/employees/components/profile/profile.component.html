@@ -6,8 +6,8 @@
     <!-- 表示切り替えボタン -->
     <app-button
       [label]="showForm ? '編集を閉じる' : 'プロフィールを編集'"
-      color="secondary"
-      size="sm"
+      color="gray"
+      size="md"
       (click)="showForm = !showForm"
       [block]="true"
     ></app-button>
@@ -15,8 +15,8 @@
     <!-- 新規作成ボタン -->
     <app-button
       label="＋ 新規作成"
-      color="primary"
-      size="sm"
+      color="blue"
+      size="md"
       [routerLink]="'/reports/new'"
       [queryParams]="{ useLatest: useLatest }"
       [block]="true"

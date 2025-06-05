@@ -1,14 +1,9 @@
-<!-- ルーターリンクか通常ボタンかで分岐 -->
 <a
   *ngIf="routerLink"
   [routerLink]="routerLink"
   [queryParams]="queryParams"
-  class="btn"
-  [ngClass]="[
-    'btn-' + color,
-    size === 'sm' ? 'btn-sm' : size === 'lg' ? 'btn-lg' : '',
-    block ? 'w-100' : ''
-  ]"
+  class="app-btn"
+  [ngClass]="buttonClasses"
 >
   {{ label }}
 </a>
@@ -16,12 +11,8 @@
 <button
   *ngIf="!routerLink"
   [type]="type"
-  class="btn"
-  [ngClass]="[
-    'btn-' + color,
-    size === 'sm' ? 'btn-sm' : size === 'lg' ? 'btn-lg' : '',
-    block ? 'w-100' : ''
-  ]"
+  class="app-btn"
+  [ngClass]="buttonClasses"
 >
   {{ label }}
 </button>

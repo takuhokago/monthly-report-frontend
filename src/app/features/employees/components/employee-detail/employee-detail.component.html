@@ -6,19 +6,19 @@
     <div class="d-flex flex-wrap gap-2 flex-md-row flex-column mt-4">
       <app-button
         label="一覧に戻る"
-        color="secondary"
+        color="gray"
         [routerLink]="'/employees'"
         [block]="true"
       ></app-button>
       <app-button
         label="編集"
-        color="primary"
+        color="blue"
         [routerLink]="'/employees/' + employee.code + '/edit'"
         [block]="true"
       ></app-button>
       <app-button
         label="削除"
-        color="danger"
+        color="red"
         (click)="onDelete(employee.code)"
         [block]="true"
       ></app-button>

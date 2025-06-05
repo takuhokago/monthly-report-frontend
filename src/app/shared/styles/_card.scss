@@ -1,0 +1,30 @@
+.app-card {
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+
+  .card-header {
+    background-color: #e3f2fd; // 明るい水色（Bootstrapのlight版primary）
+    color: #0d6efd; // 通常のprimaryブルー
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .card-body {
+    background-color: #ffffff;
+    color: #212529;
+    padding: 1.5rem;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #495057; // 少し柔らかいグレー
+  }
+
+  .form-control {
+    background-color: #f8f9fa;
+    border: none;
+    color: #212529;
+  }
+}

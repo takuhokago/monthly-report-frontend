@@ -6,7 +6,7 @@
     <div class="d-flex flex-wrap gap-2 flex-md-row flex-column mt-4">
       <app-button
         label="一覧に戻る"
-        color="secondary"
+        color="gray"
         [routerLink]="'/reports'"
         [block]="true"
       ></app-button>
@@ -14,13 +14,13 @@
       <ng-container *ngIf="canEditOrDelete(report)">
         <app-button
           label="編集"
-          color="primary"
+          color="blue"
           [routerLink]="'/reports/' + report.id + '/edit'"
           [block]="true"
         ></app-button>
         <app-button
           label="削除"
-          color="danger"
+          color="red"
           (click)="onDelete(report.id)"
           [block]="true"
         ></app-button>
@@ -28,7 +28,7 @@
 
       <app-button
         label="承認処理"
-        color="success"
+        color="yellow"
         (click)="onApprove(report.id)"
         [block]="true"
         *ngIf="canApprove()"
@@ -36,13 +36,14 @@
 
       <app-button
         [label]="isCommentFormVisible ? 'キャンセル' : 'コメント追加'"
-        color="secondary"
+        color="teal"
         (click)="toggleCommentForm(report.comment)"
         [block]="true"
       ></app-button>
+
       <app-button
         label="Excel出力"
-        color="success"
+        color="green"
         (click)="onExportExcel(report.id)"
         [block]="true"
       ></app-button>
@@ -64,168 +65,190 @@
     </div>
 
     <h2 class="mt-4 mb-3 border-bottom pb-2">メタ情報</h2>
-    <table class="table table-striped table-hover">
-      <tbody>
-        <tr>
-          <th scope="row" class="w-25">日付</th>
-          <td>{{ report.reportMonth }}</td>
-        </tr>
-        <tr>
-          <th scope="row">提出期日</th>
-          <td>{{ report.reportDeadline | date : "yyyy-MM-dd" }}</td>
-        </tr>
-        <tr>
-          <th scope="row">提出日</th>
-          <td>
-            {{
-              report.submittedAt
-                ? (report.submittedAt | date : "yyyy-MM-dd")
-                : "-"
-            }}
-          </td>
-        </tr>
+    <div class="pb-4">
+      <table class="table table-striped table-hover">
+        <tbody>
+          <tr>
+            <th scope="row" class="w-25">日付</th>
+            <td>{{ report.reportMonth }}</td>
+          </tr>
+          <tr>
+            <th scope="row">提出期日</th>
+            <td>{{ report.reportDeadline | date : "yyyy-MM-dd" }}</td>
+          </tr>
+          <tr>
+            <th scope="row">提出日</th>
+            <td>
+              {{
+                report.submittedAt
+                  ? (report.submittedAt | date : "yyyy-MM-dd")
+                  : "-"
+              }}
+            </td>
+          </tr>
 
-        <tr>
-          <th scope="row">更新日時</th>
-          <td>{{ report.updatedAt | date : "yyyy-MM-dd HH:mm" }}</td>
-        </tr>
-        <tr>
-          <th scope="row">所属</th>
-          <td>{{ report.departmentName }}</td>
-        </tr>
-        <tr>
-          <th scope="row">完了</th>
-          <td>
-            <span
-              [class.text-success]="report.completeFlg"
-              [class.text-danger]="!report.completeFlg"
-            >
-              {{ report.completeFlg ? "✓ 完了" : "✕ 未完了" }}
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">承認</th>
-          <td>
-            <ng-container [ngSwitch]="report.approvalFlg">
-              <span *ngSwitchCase="true" class="text-success">承認</span>
-              <span *ngSwitchCase="false" class="text-danger">非承認</span>
-              <span *ngSwitchDefault>-</span>
-            </ng-container>
-          </td>
-        </tr>
-        <tr>
-          <th scope="row">コメント</th>
-          <td style="white-space: pre-wrap">{{ report.comment || "-" }}</td>
-        </tr>
-      </tbody>
-    </table>
+          <tr>
+            <th scope="row">更新日時</th>
+            <td>{{ report.updatedAt | date : "yyyy-MM-dd HH:mm" }}</td>
+          </tr>
+          <tr>
+            <th scope="row">所属</th>
+            <td>{{ report.departmentName }}</td>
+          </tr>
+          <tr>
+            <th scope="row">完了</th>
+            <td>
+              <span
+                [class.text-success]="report.completeFlg"
+                [class.text-danger]="!report.completeFlg"
+              >
+                {{ report.completeFlg ? "✓ 完了" : "✕ 未完了" }}
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">承認</th>
+            <td>
+              <ng-container [ngSwitch]="report.approvalFlg">
+                <span *ngSwitchCase="true" class="text-success">承認</span>
+                <span *ngSwitchCase="false" class="text-danger">非承認</span>
+                <span *ngSwitchDefault>-</span>
+              </ng-container>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">コメント</th>
+            <td style="white-space: pre-wrap">{{ report.comment || "-" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- 業務内容 -->
-    <div class="mb-4 pt-3 pb-3">
-      <h2 class="mb-3">業務内容</h2>
-      <div class="mb-3">
-        <label class="form-label">業務環境 / 開発環境</label>
-        <div class="form-control bg-light" style="white-space: pre-wrap">
-          {{ report.contentBusiness }}
-        </div>
+    <div class="card mb-4 app-card">
+      <div class="card-header">
+        <h2 class="h5 m-0">業務内容</h2>
       </div>
-
-      <div class="mb-3">
-        <label class="form-label">メンバー関連</label>
-        <div class="form-control bg-light" style="white-space: pre-wrap">
-          {{ report.contentMember }}
+      <div class="card-body">
+        <div class="mb-4">
+          <label class="form-label">業務環境 / 開発環境</label>
+          <div class="form-control bg-light" style="white-space: pre-wrap">
+            {{ report.contentBusiness }}
+          </div>
         </div>
-      </div>
 
-      <div class="mb-3">
-        <label class="form-label">お客様情報</label>
-        <div class="form-control bg-light" style="white-space: pre-wrap">
-          {{ report.contentCustomer }}
+        <div class="mb-4">
+          <label class="form-label">メンバー関連</label>
+          <div class="form-control bg-light" style="white-space: pre-wrap">
+            {{ report.contentMember }}
+          </div>
         </div>
-      </div>
 
-      <div class="mb-3">
-        <label class="form-label">作業における問題点と解決策</label>
-        <div class="form-control bg-light" style="white-space: pre-wrap">
-          {{ report.contentProblem }}
+        <div class="mb-4">
+          <label class="form-label">お客様情報</label>
+          <div class="form-control bg-light" style="white-space: pre-wrap">
+            {{ report.contentCustomer }}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">作業における問題点と解決策</label>
+          <div class="form-control bg-light" style="white-space: pre-wrap">
+            {{ report.contentProblem }}
+          </div>
         </div>
       </div>
     </div>
 
     <!-- 勤務・残業・達成率 -->
-    <div class="row g-3 mb-4 pb-3">
-      <div class="col-md-3">
-        <label class="form-label">勤務時間</label>
-        <div class="form-control bg-light">
-          {{ timeWorkedHour }} 時間 {{ timeWorkedMinute }} 分
-        </div>
+    <div class="card mb-4 app-card">
+      <div class="card-header">
+        <h2 class="h5 m-0">勤務・残業・達成率</h2>
       </div>
-      <div class="col-md-3">
-        <label class="form-label">残業時間</label>
-        <div class="form-control bg-light">
-          {{ timeOverHour }} 時間 {{ timeOverMinute }} 分
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label">業務目標達成率</label>
-        <div class="form-control bg-light">{{ report.rateBusiness }} %</div>
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">学習目標達成率</label>
-        <div class="form-control bg-light">{{ report.rateStudy }} %</div>
-      </div>
-      <div class="col-md-3">
-        <label class="form-label">業務量推移</label>
-        <div class="form-control bg-light">{{ report.trendBusiness }} %</div>
-      </div>
-    </div>
-
-    <!-- 自己評価・目標 -->
-    <div class="mb-4 pb-3">
-      <h2 class="mb-3">自己評価・来月の目標</h2>
-      <div class="row g-3">
-        <div class="col-md-6">
-          <label class="form-label">業務目標（自己評価）</label>
-          <div class="form-control bg-light" style="white-space: pre-wrap">
-            {{ report.evaluationBusiness }}
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-3 mb-3">
+            <label class="form-label">勤務時間</label>
+            <div class="form-control bg-light">
+              {{ timeWorkedHour }} 時間 {{ timeWorkedMinute }} 分
+            </div>
           </div>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">学習目標（自己評価）</label>
-          <div class="form-control bg-light" style="white-space: pre-wrap">
-            {{ report.evaluationStudy }}
+          <div class="col-md-3 mb-3">
+            <label class="form-label">残業時間</label>
+            <div class="form-control bg-light">
+              {{ timeOverHour }} 時間 {{ timeOverMinute }} 分
+            </div>
           </div>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">業務目標（来月）</label>
-          <div class="form-control bg-light" style="white-space: pre-wrap">
-            {{ report.goalBusiness }}
+          <div class="col-md-3 mb-3">
+            <label class="form-label">業務目標達成率</label>
+            <div class="form-control bg-light">{{ report.rateBusiness }} %</div>
           </div>
-        </div>
-        <div class="col-md-6">
-          <label class="form-label">学習目標（来月）</label>
-          <div class="form-control bg-light" style="white-space: pre-wrap">
-            {{ report.goalStudy }}
+          <div class="col-md-3 mb-3">
+            <label class="form-label">学習目標達成率</label>
+            <div class="form-control bg-light">{{ report.rateStudy }} %</div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label class="form-label">業務量推移</label>
+            <div class="form-control bg-light">
+              {{ report.trendBusiness }} %
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- その他 -->
-    <div class="mb-4">
-      <h2 class="mb-3">会社・その他</h2>
-      <div class="mb-3">
-        <label class="form-label">会社関係</label>
-        <div class="form-control bg-light" style="white-space: pre-wrap">
-          {{ report.contentCompany }}
+    <!-- 自己評価・来月の目標 -->
+    <div class="card mb-4 app-card">
+      <div class="card-header">
+        <h2 class="h5 m-0">自己評価・来月の目標</h2>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">業務目標（自己評価）</label>
+            <div class="form-control bg-light" style="white-space: pre-wrap">
+              {{ report.evaluationBusiness }}
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">学習目標（自己評価）</label>
+            <div class="form-control bg-light" style="white-space: pre-wrap">
+              {{ report.evaluationStudy }}
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">業務目標（来月）</label>
+            <div class="form-control bg-light" style="white-space: pre-wrap">
+              {{ report.goalBusiness }}
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">学習目標（来月）</label>
+            <div class="form-control bg-light" style="white-space: pre-wrap">
+              {{ report.goalStudy }}
+            </div>
+          </div>
         </div>
       </div>
-      <div class="mb-3">
-        <label class="form-label">その他</label>
-        <div class="form-control bg-light" style="white-space: pre-wrap">
-          {{ report.contentOthers }}
+    </div>
+
+    <!-- 会社・その他 -->
+    <div class="card mb-4 app-card">
+      <div class="card-header">
+        <h2 class="h5 m-0">会社・その他</h2>
+      </div>
+      <div class="card-body">
+        <div class="mb-4">
+          <label class="form-label">会社関係</label>
+          <div class="form-control bg-light" style="white-space: pre-wrap">
+            {{ report.contentCompany }}
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">その他</label>
+          <div class="form-control bg-light" style="white-space: pre-wrap">
+            {{ report.contentOthers }}
+          </div>
         </div>
       </div>
     </div>
