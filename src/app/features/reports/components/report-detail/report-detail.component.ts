@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { CharCountComponent } from '../../../../shared/char-count/char-count.component';
 import { ButtonComponent } from '../../../../shared/button/button.component';
 import { AuthService } from '../../../auth/services/auth.service';
+import { ExcelDownloadService } from '../../services/excel-download.service';
 
 @Component({
   standalone: true,
@@ -36,7 +37,8 @@ export class ReportDetailComponent {
     private route: ActivatedRoute,
     private reportService: ReportService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private excelDownloadService: ExcelDownloadService
   ) {
     this.loadReport();
   }
@@ -119,37 +121,8 @@ export class ReportDetailComponent {
 
   onExportExcel(reportId: number): void {
     this.reportService.downloadReportExcel(reportId).subscribe((res) => {
-      const blob = res.body!;
-      const contentDisposition = res.headers.get('Content-Disposition');
-      const filename =
-        this.extractFilename(contentDisposition) || 'report.xlsx';
-
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      link.click();
-      URL.revokeObjectURL(link.href);
+      this.excelDownloadService.download(res, `report-${reportId}.xlsx`);
     });
-  }
-
-  private extractFilename(contentDisposition: string | null): string | null {
-    if (!contentDisposition) return null;
-
-    // filename*=UTF-8''xxx.xlsx を優先
-    const utf8FilenameRegex = /filename\*=UTF-8''(.+?)(?:;|$)/i;
-    const fallbackFilenameRegex = /filename="(.+?)"/i;
-
-    const utf8Match = utf8FilenameRegex.exec(contentDisposition);
-    if (utf8Match && utf8Match[1]) {
-      return decodeURIComponent(utf8Match[1]);
-    }
-
-    const fallbackMatch = fallbackFilenameRegex.exec(contentDisposition);
-    if (fallbackMatch && fallbackMatch[1]) {
-      return fallbackMatch[1];
-    }
-
-    return null;
   }
 
   canEditOrDelete(report: ReportDto): boolean {

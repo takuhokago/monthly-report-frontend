@@ -1,12 +1,12 @@
 <div class="container mt-5">
   <!-- タイトル・操作バー -->
   <div class="row mb-4 mt-3 align-items-center">
-    <div class="col-12 col-md-6 mb-2 mb-md-0">
+    <div class="col-12 col-md-4 mb-2 mb-md-0">
       <h1 class="h1 mb-0">報告書 一覧</h1>
     </div>
 
     <div
-      class="col-12 col-md-6 d-flex flex-column flex-md-row align-items-md-center justify-content-md-end"
+      class="col-12 col-md-8 d-flex flex-column flex-md-row align-items-md-center justify-content-md-end"
     >
       <!-- ✅ チェックボックス -->
       <div class="form-check me-md-3 mb-2 mb-md-0">
@@ -31,6 +31,15 @@
         class="me-md-3 mb-2 mb-md-0"
       />
 
+      <app-button
+        label="選択した報告書を出力"
+        color="green"
+        size="md"
+        [block]="true"
+        (click)="exportSelectedReports()"
+        class="me-md-3 mb-2 mb-md-0"
+      />
+
       <app-select
         label="表示月"
         [options]="reportMonthList"
@@ -51,6 +60,23 @@
   <div class="table-responsive">
     <!-- MatTable（Material Table） -->
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <!-- ✅ チェックボックス列 -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox
+            (change)="toggleAllSelection($event.checked)"
+            [checked]="isAllSelected()"
+            [indeterminate]="isSomeSelected()"
+          ></mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let report">
+          <mat-checkbox
+            (change)="toggleSelection(report)"
+            [checked]="isSelected(report)"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
       <!-- 氏名列 -->
       <ng-container matColumnDef="employeeName">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>氏名</th>

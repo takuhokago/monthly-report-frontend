@@ -14,6 +14,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
+import { ExcelDownloadService } from '../../services/excel-download.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-report-list',
@@ -29,6 +31,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatPaginatorModule,
     MatIconModule,
     MatButtonModule,
+    MatCheckboxModule,
   ],
   templateUrl: './report-list.component.html',
   styleUrls: ['./report-list.component.scss'],
@@ -40,6 +43,7 @@ export class ReportListComponent implements OnInit {
   selectedMonth: string = '';
   useLatest = false;
   displayedColumns: string[] = [
+    'select',
     'employeeName',
     'reportMonth',
     'reportDeadline',
@@ -51,10 +55,14 @@ export class ReportListComponent implements OnInit {
     'actions',
   ];
   @ViewChild(MatSort) sort!: MatSort;
+  selectedReports: Set<number> = new Set();
 
   dataSource = new MatTableDataSource<ReportDto>(this.filteredReports);
 
-  constructor(private reportService: ReportService) {}
+  constructor(
+    private reportService: ReportService,
+    private excelDownloadService: ExcelDownloadService
+  ) {}
 
   ngOnInit(): void {
     this.reportService.getReports().subscribe({
@@ -107,5 +115,51 @@ export class ReportListComponent implements OnInit {
 
   hasValue(str?: string | null): boolean {
     return !!str && str.trim().length > 0;
+  }
+
+  isSelected(report: ReportDto): boolean {
+    return this.selectedReports.has(report.id);
+  }
+
+  toggleSelection(report: ReportDto): void {
+    if (this.isSelected(report)) {
+      this.selectedReports.delete(report.id);
+    } else {
+      this.selectedReports.add(report.id);
+    }
+  }
+
+  toggleAllSelection(checked: boolean): void {
+    if (checked) {
+      this.filteredReports.forEach((r) => this.selectedReports.add(r.id));
+    } else {
+      this.selectedReports.clear();
+    }
+  }
+
+  isAllSelected(): boolean {
+    return (
+      this.filteredReports.length > 0 &&
+      this.filteredReports.every((r) => this.selectedReports.has(r.id))
+    );
+  }
+
+  isSomeSelected(): boolean {
+    const selectedCount = this.filteredReports.filter((r) =>
+      this.selectedReports.has(r.id)
+    ).length;
+    return selectedCount > 0 && selectedCount < this.filteredReports.length;
+  }
+  exportSelectedReports(): void {
+    if (this.selectedReports.size === 0) {
+      alert('少なくとも1件の報告書を選択してください。');
+      return;
+    }
+
+    this.selectedReports.forEach((id) => {
+      this.reportService.downloadReportExcel(id).subscribe((res) => {
+        this.excelDownloadService.download(res, `report-${id}.xlsx`);
+      });
+    });
   }
 }
