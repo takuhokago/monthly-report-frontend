@@ -162,7 +162,7 @@ export class ReportDetailComponent {
     );
   }
 
-  canApprove(): boolean {
+  isAdmin(): boolean {
     return this.authService.isAdmin();
   }
 }

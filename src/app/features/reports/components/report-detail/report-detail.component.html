@@ -31,7 +31,7 @@
         color="yellow"
         (click)="onApprove(report.id)"
         [block]="true"
-        *ngIf="canApprove()"
+        *ngIf="isAdmin()"
       ></app-button>
 
       <app-button
@@ -39,6 +39,7 @@
         color="teal"
         (click)="toggleCommentForm(report.comment)"
         [block]="true"
+        *ngIf="isAdmin()"
       ></app-button>
 
       <app-button

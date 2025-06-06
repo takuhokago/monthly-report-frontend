@@ -325,7 +325,13 @@
           <small class="text-danger fw-bold">200%</small>
         </div>
         <div class="mt-2">
-          現在の推移値: <strong>{{ report.trendBusiness }}%</strong>
+          現在の推移値:
+          <strong
+            [ngClass]="{
+              'text-danger fw-bold': report.trendBusiness > 100
+            }"
+            >{{ report.trendBusiness }}%</strong
+          >
         </div>
         <div
           *ngIf="trendBusinessInput.invalid && trendBusinessInput.touched"
