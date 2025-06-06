@@ -62,7 +62,12 @@ export class ReportListComponent implements OnInit {
   constructor(
     private reportService: ReportService,
     private excelDownloadService: ExcelDownloadService
-  ) {}
+  ) {
+    this.dataSource.sortingDataAccessor = (item, property) => {
+      const value = (item as any)[property];
+      return typeof value === 'string' ? value : value ?? '';
+    };
+  }
 
   ngOnInit(): void {
     this.reportService.getReports().subscribe({
@@ -90,6 +95,32 @@ export class ReportListComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
+    this.dataSource.sortData = (data: ReportDto[], sort: MatSort) => {
+      const active = sort.active;
+      const direction = sort.direction;
+      if (!active || direction === '') {
+        return data;
+      }
+
+      const sorted = data.slice().sort((a, b) => {
+        let valueA = (a as any)[active];
+        let valueB = (b as any)[active];
+
+        // 日本語文字列の比較
+        if (typeof valueA === 'string' && typeof valueB === 'string') {
+          return valueA.localeCompare(valueB, 'ja');
+        }
+
+        // 数値やnullの比較
+        valueA = valueA ?? 0;
+        valueB = valueB ?? 0;
+        return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+      });
+
+      // 🔽 ここで昇順・降順を制御
+      return direction === 'asc' ? sorted : sorted.reverse();
+    };
+
     this.dataSource.sort = this.sort;
   }
 
