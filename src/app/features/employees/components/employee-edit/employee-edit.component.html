@@ -71,10 +71,10 @@
         <!-- パスワード -->
         <div class="row mb-4">
           <div class="col-12 col-md-6">
-            <label for="password" class="form-label">パスワード</label>
-            <div class="form-text mb-1">
-              ※パスワードを変更する場合のみ入力してください。
-            </div>
+            <label for="password" class="form-label">
+              パスワード <small class="text-muted">(半角英数字8〜16文字)</small>
+            </label>
+
             <input
               type="password"
               id="password"
@@ -83,14 +83,57 @@
               name="password"
               minlength="8"
               maxlength="16"
+              required
               pattern="^[A-Za-z0-9]+$"
               #passwordInput="ngModel"
+              (ngModelChange)="checkPasswordStrength($event)"
             />
             <div
-              *ngIf="passwordInput.invalid && passwordInput.touched"
+              *ngIf="
+                passwordInput.invalid &&
+                (passwordInput.dirty || passwordInput.value)
+              "
               class="form-text text-danger"
             >
               パスワードは半角英数字8〜16文字で入力してください。
+            </div>
+
+            <div *ngIf="passwordStrength" class="mt-2">
+              <!-- 色付きバー（レスポンシブ対応） -->
+              <div
+                class="progress"
+                style="height: 8px; max-width: 150px; width: 100%"
+              >
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  [ngClass]="{
+                    'bg-danger': passwordStrengthClass === 'text-danger',
+                    'bg-warning': passwordStrengthClass === 'text-warning',
+                    'bg-success': passwordStrengthClass === 'text-success'
+                  }"
+                  style="width: 100%"
+                ></div>
+              </div>
+
+              <!-- アイコン＋テキスト -->
+              <div class="d-flex mt-1">
+                <i
+                  class="bi"
+                  [ngClass]="{
+                    'bi-x-circle-fill text-danger':
+                      passwordStrengthClass === 'text-danger',
+                    'bi-exclamation-circle-fill text-warning':
+                      passwordStrengthClass === 'text-warning',
+                    'bi-check-circle-fill text-success':
+                      passwordStrengthClass === 'text-success'
+                  }"
+                  style="margin-right: 6px"
+                ></i>
+                <small [ngClass]="passwordStrengthClass" class="fw-bold m-0">
+                  {{ passwordStrength }}
+                </small>
+              </div>
             </div>
           </div>
         </div>

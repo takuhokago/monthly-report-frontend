@@ -34,6 +34,9 @@ export class EmployeeEditComponent implements OnInit {
 
   departments: DepartmentDto[] = [];
 
+  passwordStrength = '';
+  passwordStrengthClass = '';
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -101,7 +104,6 @@ export class EmployeeEditComponent implements OnInit {
     };
     console.log('送信データ:', updateData);
 
-
     this.employeeService.update(this.employee.code, updateData).subscribe({
       next: () => {
         alert('従業員情報を更新しました');
@@ -119,5 +121,36 @@ export class EmployeeEditComponent implements OnInit {
     if (role === 'ADMIN' || role === 'GENERAL')
       return role as 'GENERAL' | 'ADMIN';
     return role === '管理者' ? 'ADMIN' : 'GENERAL';
+  }
+
+  checkPasswordStrength(password: string): void {
+    // パスワード強度の判定
+    // 強: 大文字・小文字・数字すべて含む & 長さ12〜16文字
+    // 普通: 文字種が3つ未満で2つ以上含む & 長さ8〜16文字
+    // 弱: 上記以外（8〜16文字）
+    // 表示なし: 8文字未満 or 16文字超
+
+    const length = password.length;
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasDigit = /\d/.test(password);
+
+    const typesCount = [hasUpper, hasLower, hasDigit].filter(Boolean).length;
+
+    if (length >= 8 && length <= 16) {
+      if (typesCount === 3 && length >= 12) {
+        this.passwordStrength = '強力なパスワードです';
+        this.passwordStrengthClass = 'text-success';
+      } else if (typesCount >= 2) {
+        this.passwordStrength = '普通のパスワードです';
+        this.passwordStrengthClass = 'text-warning';
+      } else {
+        this.passwordStrength = '弱いパスワードです';
+        this.passwordStrengthClass = 'text-danger';
+      }
+    } else {
+      this.passwordStrength = '';
+      this.passwordStrengthClass = '';
+    }
   }
 }
