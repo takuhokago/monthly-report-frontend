@@ -3,7 +3,9 @@
   [routerLink]="routerLink"
   [queryParams]="queryParams"
   class="app-btn"
-  [ngClass]="buttonClasses"
+  [ngClass]="buttonClasses.concat(disabled ? 'disabled' : [])"
+  [attr.aria-disabled]="disabled ? 'true' : null"
+  (click)="disabled ? $event.preventDefault() : null"
 >
   {{ label }}
 </a>
@@ -13,6 +15,7 @@
   [type]="type"
   class="app-btn"
   [ngClass]="buttonClasses"
+  [attr.disabled]="disabled ? true : null"
 >
   {{ label }}
 </button>

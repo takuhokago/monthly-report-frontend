@@ -96,4 +96,12 @@ export const appRoutes: Routes = [
       ),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'report-due-dates',
+    loadComponent: () =>
+      import(
+        './features/report-due-dates/components/due-date-list/due-date-list.component'
+      ).then((m) => m.DueDateListComponent),
+    canActivate: [AuthGuard, AdminGuard],
+  },
 ];

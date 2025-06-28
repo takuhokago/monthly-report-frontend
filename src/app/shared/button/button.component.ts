@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-button',
@@ -25,6 +26,7 @@ export class ButtonComponent {
   @Input() block: boolean = false;
   @Input() routerLink?: string;
   @Input() queryParams?: { [key: string]: any };
+  @Input() disabled: boolean = false;
 
   get buttonClasses(): string[] {
     return [
@@ -36,5 +38,13 @@ export class ButtonComponent {
         : '',
       this.block ? 'app-btn-block' : '',
     ];
+  }
+
+  @HostListener('click', ['$event'])
+  onClick(event: Event) {
+    if (this.disabled) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
   }
 }

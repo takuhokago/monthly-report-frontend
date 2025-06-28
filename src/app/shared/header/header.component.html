@@ -33,6 +33,16 @@
           >
         </li>
 
+        <li class="nav-item" *ngIf="isAdmin">
+          <a
+            class="nav-link"
+            routerLink="/report-due-dates"
+            (click)="closeNavbar()"
+          >
+            提出期日設定
+          </a>
+        </li>
+
         <li class="nav-item">
           <a class="nav-link" routerLink="/profile" (click)="closeNavbar()"
             >{{ userName }} さん</a

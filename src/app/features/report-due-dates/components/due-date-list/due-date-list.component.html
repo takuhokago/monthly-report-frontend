@@ -1,0 +1,138 @@
+<div class="container pt-5 pb-5">
+  <h1 class="pb-3">提出期日一覧</h1>
+
+  <!-- 操作バー（年度選択・年度管理・提出期日編集） -->
+  <div
+    class="d-flex flex-column flex-md-row align-items-start align-items-md-center gap-2 gap-md-3 mb-4"
+  >
+    <!-- 年度選択 -->
+    <mat-form-field appearance="fill" style="width: 200px" class="me-md-2">
+      <mat-label>年度を選択</mat-label>
+      <mat-select [(ngModel)]="selectedYear" (selectionChange)="filterByYear()">
+        <mat-option *ngFor="let y of years" [value]="y">{{ y }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- 年度管理ボタン -->
+    <app-button
+      [label]="isRegistering ? 'キャンセル' : '＋ 年度管理'"
+      (click)="!isEditing && toggleRegistering()"
+      [disabled]="isEditing"
+      color="blue"
+      size="md"
+      class="me-md-2"
+      [block]="true"
+    ></app-button>
+
+    <!-- 編集ボタン -->
+    <ng-container *ngIf="!isEditing">
+      <app-button
+        label="✎ 提出期日編集"
+        color="green"
+        size="md"
+        (click)="!isRegistering && startEdit()"
+        [disabled]="isRegistering"
+        class="me-md-2"
+        [block]="true"
+      ></app-button>
+    </ng-container>
+
+    <!-- 保存・キャンセル（編集中） -->
+    <ng-container *ngIf="isEditing">
+      <app-button
+        label="保存"
+        color="green"
+        size="md"
+        (click)="!hasEmptyDueDates && saveAllDueDates()"
+        [disabled]="hasEmptyDueDates"
+        class="me-md-2"
+        [block]="true"
+      ></app-button>
+
+      <app-button
+        label="キャンセル"
+        color="gray"
+        size="md"
+        (click)="cancelEdit()"
+        class="me-md-2"
+        [block]="true"
+      ></app-button>
+    </ng-container>
+  </div>
+
+  <!-- 年度登録フォーム（トグル表示） -->
+  <div
+    *ngIf="isRegistering"
+    class="d-flex flex-column flex-md-row align-items-md-center gap-2 mb-3"
+  >
+    <mat-form-field appearance="outline" style="width: 150px">
+      <mat-label>新しい年を登録</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="newYear"
+        placeholder="例: 2025"
+      />
+    </mat-form-field>
+    <app-button
+      label="登録"
+      (click)="registerYear()"
+      color="blue"
+      size="md"
+      [block]="true"
+    ></app-button>
+    <app-button
+      label="削除"
+      (click)="deleteYear()"
+      color="red"
+      size="md"
+      [block]="true"
+    ></app-button>
+  </div>
+
+  <!-- 一覧テーブル -->
+  <table mat-table [dataSource]="filteredDueDates" class="mat-elevation-z8">
+    <ng-container matColumnDef="year">
+      <th mat-header-cell *matHeaderCellDef>年</th>
+      <td mat-cell *matCellDef="let due">{{ due.year }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="month">
+      <th mat-header-cell *matHeaderCellDef>月</th>
+      <td mat-cell *matCellDef="let due">{{ due.month }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="dueDateTime">
+      <th mat-header-cell *matHeaderCellDef>提出期日</th>
+      <td mat-cell *matCellDef="let due; let i = index">
+        <ng-container *ngIf="isEditing; else readOnly">
+          <div>
+            <input
+              type="datetime-local"
+              [(ngModel)]="due.dueDateTime"
+              name="dueDateTime{{ i }}"
+              [min]="getMinDateTime(due)"
+              [max]="getMaxDateTime(due)"
+              required
+              #dtInput="ngModel"
+              [class.is-invalid]="dtInput.invalid && dtInput.touched"
+              style="max-width: 220px"
+            />
+            <div
+              *ngIf="dtInput.invalid && dtInput.touched"
+              class="text-danger small mt-1"
+            >
+              提出期日は必須です
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #readOnly>
+          {{ due.dueDateTime | date : "yyyy/MM/dd EEE HH:mm" }}
+        </ng-template>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
