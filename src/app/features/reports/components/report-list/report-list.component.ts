@@ -129,6 +129,9 @@ export class ReportListComponent implements OnInit {
 
     // ソートを再度バインド（selectedMonth変更後にも必要）
     this.dataSource.sort = this.sort;
+
+    // 選択状態をリセット
+    this.selectedReports = new Set<number>();
   }
 
   get filteredReports(): ReportDto[] {
