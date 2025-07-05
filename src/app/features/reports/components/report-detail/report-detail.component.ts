@@ -10,6 +10,8 @@ import { CharCountComponent } from '../../../../shared/char-count/char-count.com
 import { ButtonComponent } from '../../../../shared/button/button.component';
 import { AuthService } from '../../../auth/services/auth.service';
 import { ExcelDownloadService } from '../../services/excel-download.service';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ApproveConfirmDialogComponent } from '../approve-confirm-dialog/approve-confirm-dialog.component';
 
 @Component({
   standalone: true,
@@ -20,6 +22,7 @@ import { ExcelDownloadService } from '../../services/excel-download.service';
     FormsModule,
     CharCountComponent,
     ButtonComponent,
+    MatDialogModule,
   ],
   templateUrl: './report-detail.component.html',
 })
@@ -38,7 +41,8 @@ export class ReportDetailComponent {
     private reportService: ReportService,
     private router: Router,
     private authService: AuthService,
-    private excelDownloadService: ExcelDownloadService
+    private excelDownloadService: ExcelDownloadService,
+    private dialog: MatDialog
   ) {
     this.loadReport();
   }
@@ -73,21 +77,24 @@ export class ReportDetailComponent {
   }
 
   onApprove(id: number): void {
-    const result = window.confirm(
-      'この報告書を承認しますか？\n\n[OK]で承認\n[キャンセル]で非承認'
-    );
-    const approve = result;
+    const dialogRef = this.dialog.open(ApproveConfirmDialogComponent);
 
-    this.reportService.approveReport(id, approve).subscribe({
-      next: () => {
-        alert(approve ? '承認しました。' : '非承認にしました。');
-        this.loadReport(); // ← 成功時に追加
-        // 必要に応じてデータを再取得したり画面更新したりする処理をここに
-      },
-      error: (err) => {
-        console.error('承認処理に失敗しました:', err);
-        alert('承認処理に失敗しました。');
-      },
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'approve' || result === 'deny') {
+        const approve = result === 'approve';
+
+        this.reportService.approveReport(id, approve).subscribe({
+          next: () => {
+            alert(approve ? '承認しました。' : '非承認にしました。');
+            this.loadReport();
+          },
+          error: (err) => {
+            console.error('承認処理に失敗しました:', err);
+            alert('承認処理に失敗しました。');
+          },
+        });
+      }
+      // キャンセル（×）やESCキーで閉じたときは何もしない
     });
   }
 
