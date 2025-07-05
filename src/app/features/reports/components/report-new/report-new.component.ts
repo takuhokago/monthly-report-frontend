@@ -80,6 +80,12 @@ export class ReportNewComponent {
           if (this.useLatest) {
             this.loadLatestReport();
           }
+
+          // 日付は現在の年月に設定
+          const now = new Date();
+          this.report.reportMonth = `${now.getFullYear()}-${String(
+            now.getMonth() + 1
+          ).padStart(2, '0')}`;
         },
         error: (err) => {
           console.error('社員情報の取得に失敗しました', err);
@@ -140,7 +146,6 @@ export class ReportNewComponent {
       next: (latest: ReportDto) => {
         if (latest) {
           const {
-            reportMonth,
             contentBusiness,
             timeWorked,
             timeOver,
@@ -159,7 +164,6 @@ export class ReportNewComponent {
           } = latest;
 
           Object.assign(this.report, {
-            reportMonth,
             contentBusiness,
             timeWorked,
             timeOver,
