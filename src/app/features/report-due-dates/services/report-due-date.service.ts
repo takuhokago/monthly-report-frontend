@@ -127,4 +127,25 @@ export class ReportDueDateService {
         })
       );
   }
+
+  /**
+   * 特定の年月の提出期日（LocalDateTime）を取得
+   */
+  getDueDate(year: number, month: number): Observable<Date> {
+    const yearMonth = `${year.toString().padStart(4, '0')}-${month
+      .toString()
+      .padStart(2, '0')}`;
+
+    return this.http
+      .get<string>(`${this.API_URL}/due-date?yearMonth=${yearMonth}`, {
+        withCredentials: true,
+      })
+      .pipe(
+        map((dateStr) => new Date(dateStr)), // 文字列 → Date に変換
+        catchError((error) => {
+          console.error('提出期日取得エラー:', error);
+          return throwError(() => error);
+        })
+      );
+  }
 }

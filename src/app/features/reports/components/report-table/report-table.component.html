@@ -1,7 +1,15 @@
 <div class="container mt-5">
   <div class="row">
     <div class="col-12 col-md-8 offset-md-2">
-      <h1 class="mb-3">📄 報告書一覧</h1>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>📄 報告書一覧</h1>
+        <div *ngIf="dueDateOfCurrentMonth as due" class="text-end">
+          <small class="text-muted">
+            今月の提出期日:<br />
+            {{ formatDate(due.toString(), "datetime") }}
+          </small>
+        </div>
+      </div>
 
       <div class="table-responsive">
         <mat-paginator

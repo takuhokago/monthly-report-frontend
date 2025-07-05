@@ -14,6 +14,7 @@ import { ReportDto } from '../../models/report.dto';
 import { ReportService } from '../../services/report.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { RouterLink } from '@angular/router';
+import { ReportDueDateService } from '../../../report-due-dates/services/report-due-date.service';
 
 @Component({
   selector: 'app-report-table',
@@ -41,18 +42,34 @@ export class ReportTableComponent implements OnInit, AfterViewInit {
     'comment',
     'actions',
   ];
+  dueDateOfCurrentMonth?: Date;
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private reportService: ReportService,
-    private authService: AuthService
+    private authService: AuthService,
+    private reportDueDateService: ReportDueDateService
   ) {}
 
   ngOnInit(): void {
-    const currentUser = this.authService.getCurrentUser();
+    // 現在の月の提出期日を取得
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
 
+    this.reportDueDateService.getDueDate(year, month).subscribe({
+      next: (dueDate) => {
+        this.dueDateOfCurrentMonth = dueDate;
+      },
+      error: (err) => {
+        console.error('提出期日取得エラー:', err);
+      },
+    });
+
+    // レポート一覧を取得
+    const currentUser = this.authService.getCurrentUser();
     this.reportService.getReports().subscribe((response) => {
       let reports = response.reportList;
 
