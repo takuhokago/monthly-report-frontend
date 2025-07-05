@@ -85,7 +85,7 @@ export class ReportDetailComponent {
 
         this.reportService.approveReport(id, approve).subscribe({
           next: () => {
-            alert(approve ? '承認しました。' : '非承認にしました。');
+            alert(approve ? '承認しました。' : '否認にしました。');
             this.loadReport();
           },
           error: (err) => {
