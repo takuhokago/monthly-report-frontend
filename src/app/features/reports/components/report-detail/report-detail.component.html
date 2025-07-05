@@ -70,6 +70,10 @@
       <table class="table table-striped table-hover">
         <tbody>
           <tr>
+            <th scope="row">氏名</th>
+            <td>{{ report.employeeName }}</td>
+          </tr>
+          <tr>
             <th scope="row" class="w-25">日付</th>
             <td>{{ formatDate(report.reportMonth, "month") }}</td>
           </tr>
@@ -123,7 +127,7 @@
             </td>
           </tr>
           <tr>
-            <th scope="row">コメント</th>
+            <th scope="row">承認者からのコメント</th>
             <td style="white-space: pre-wrap">{{ report.comment || "-" }}</td>
           </tr>
         </tbody>
