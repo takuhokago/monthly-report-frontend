@@ -125,14 +125,12 @@ export class ReportDetailComponent {
     });
   }
 
-  canEditOrDelete(report: ReportDto): boolean {
+  isMine(report: ReportDto): boolean {
     const currentUser = this.authService.getCurrentUser();
     if (!currentUser) return false;
 
-    // 管理者 または 報告書作成者（名前一致）
-    return (
-      this.authService.isAdmin() || report.employeeName === currentUser.name
-    );
+    // 現在のユーザーが報告書の作成者かどうか
+    return report.employeeName === currentUser.name;
   }
 
   isAdmin(): boolean {

@@ -11,7 +11,7 @@
         [block]="true"
       ></app-button>
 
-      <ng-container *ngIf="canEditOrDelete(report)">
+      <ng-container *ngIf="isMine(report)">
         <app-button
           label="編集"
           color="blue"
