@@ -71,7 +71,7 @@
         <tbody>
           <tr>
             <th scope="row" class="w-25">日付</th>
-            <td>{{ report.reportMonth }}</td>
+            <td>{{ formatDate(report.reportMonth, "month") }}</td>
           </tr>
           <tr>
             <th scope="row">提出期日</th>
@@ -87,7 +87,7 @@
             <td>
               {{
                 report.submittedAt
-                  ? (report.submittedAt | date : "yyyy-MM-dd")
+                  ? (report.submittedAt | date : "yyyy/MM/dd")
                   : "-"
               }}
             </td>
@@ -95,7 +95,7 @@
 
           <tr>
             <th scope="row">更新日時</th>
-            <td>{{ report.updatedAt | date : "yyyy-MM-dd HH:mm" }}</td>
+            <td>{{ report.updatedAt | date : "yyyy/MM/dd HH:mm" }}</td>
           </tr>
           <tr>
             <th scope="row">所属</th>
