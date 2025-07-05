@@ -46,7 +46,7 @@ export class ReportListComponent implements OnInit {
     'select',
     'employeeName',
     'reportMonth',
-    'reportDeadline',
+    'dueDate',
     'submittedAt',
     'departmentName',
     'completeFlg',
@@ -138,13 +138,25 @@ export class ReportListComponent implements OnInit {
     return this.reports.filter((r) => r.reportMonth === this.selectedMonth);
   }
 
-  formatDate(input: string, mode: 'month' | 'date'): string {
+  formatDate(input: string, mode: 'month' | 'date' | 'datetime'): string {
     if (!input) return '';
-    const date = new Date(input + (mode === 'month' ? '-01' : ''));
+    const date = new Date(input);
     const y = date.getFullYear();
     const m = ('0' + (date.getMonth() + 1)).slice(-2);
     const d = ('0' + date.getDate()).slice(-2);
-    return mode === 'month' ? `${y}/${m}` : `${y}/${m}/${d}`;
+    const hh = ('0' + date.getHours()).slice(-2);
+    const mm = ('0' + date.getMinutes()).slice(-2);
+
+    switch (mode) {
+      case 'month':
+        return `${y}/${m}`;
+      case 'date':
+        return `${m}/${d}`;
+      case 'datetime':
+        return `${y}/${m}/${d} ${hh}:${mm}`;
+      default:
+        return '';
+    }
   }
 
   hasValue(str?: string | null): boolean {

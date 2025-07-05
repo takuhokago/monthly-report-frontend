@@ -75,7 +75,12 @@
           </tr>
           <tr>
             <th scope="row">提出期日</th>
-            <td>{{ report.reportDeadline | date : "yyyy-MM-dd" }}</td>
+            <td>
+              <ng-container *ngIf="report.dueDate; else noDueDate">
+                {{ formatDate(report.dueDate, "datetime") }}
+              </ng-container>
+              <ng-template #noDueDate> - </ng-template>
+            </td>
           </tr>
           <tr>
             <th scope="row">提出日</th>

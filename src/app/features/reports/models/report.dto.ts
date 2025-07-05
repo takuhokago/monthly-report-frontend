@@ -25,6 +25,7 @@ export interface ReportDto {
   employeeCode: string;
   employeeName: string;
   departmentName: string;
+  dueDate: string | null;
 }
 
 export interface ReportListResponse {
@@ -46,4 +47,5 @@ export type ReportCreateRequest = Omit<
   | 'reportDeadline'
   | 'approvalFlg'
   | 'comment'
+  | 'dueDate'
 >;
