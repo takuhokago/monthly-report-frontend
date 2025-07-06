@@ -65,8 +65,11 @@
           >業務環境 / 開発環境</label
         >
         <textarea
+          matInput
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="12"
+          cdkAutosizeMaxRows="30"
           id="contentBusiness"
-          rows="17"
           class="form-control"
           [(ngModel)]="report.contentBusiness"
           name="contentBusiness"
@@ -75,6 +78,7 @@
           #fieldRef
           placeholder="使用したツールや開発環境、手法などを記入してください。"
         ></textarea>
+
         <app-char-count [value]="report.contentBusiness" [max]="1000" />
         <div
           *ngIf="contentBusinessInput.invalid && contentBusinessInput.touched"
@@ -88,8 +92,11 @@
       <div class="mb-3">
         <label for="contentMember" class="form-label">メンバー関連</label>
         <textarea
+          matInput
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="10"
+          cdkAutosizeMaxRows="20"
           id="contentMember"
-          rows="10"
           class="form-control"
           [(ngModel)]="report.contentMember"
           name="contentMember"
@@ -97,6 +104,7 @@
           #contentMemberInput="ngModel"
           placeholder="関わったメンバー、役割分担、連携内容などを記入してください。"
         ></textarea>
+
         <app-char-count [value]="report.contentMember" [max]="800" />
         <div
           *ngIf="contentMemberInput.invalid && contentMemberInput.touched"
@@ -110,8 +118,11 @@
       <div class="mb-3">
         <label for="contentCustomer" class="form-label">お客様情報</label>
         <textarea
+          matInput
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="5"
+          cdkAutosizeMaxRows="15"
           id="contentCustomer"
-          rows="5"
           class="form-control"
           [(ngModel)]="report.contentCustomer"
           name="contentCustomer"
@@ -119,6 +130,7 @@
           #contentCustomerInput="ngModel"
           placeholder="お客様の業種、対応内容、課題などを記入してください。"
         ></textarea>
+
         <app-char-count [value]="report.contentCustomer" [max]="800" />
         <div
           *ngIf="contentCustomerInput.invalid && contentCustomerInput.touched"
@@ -134,14 +146,19 @@
           >作業における問題点と解決策</label
         >
         <textarea
+          matInput
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="5"
+          cdkAutosizeMaxRows="20"
           id="contentProblem"
-          rows="8"
           class="form-control"
           [(ngModel)]="report.contentProblem"
           name="contentProblem"
           maxlength="800"
           #contentProblemInput="ngModel"
+          placeholder="作業における問題点、解決策、ヒヤリハットなどを記入してください。"
         ></textarea>
+
         <app-char-count [value]="report.contentProblem" [max]="800" />
         <div
           *ngIf="contentProblemInput.invalid && contentProblemInput.touched"
@@ -351,8 +368,11 @@
             >業務目標（自己評価）</label
           >
           <textarea
+            matInput
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="4"
+            cdkAutosizeMaxRows="15"
             id="evaluationBusiness"
-            rows="5"
             class="form-control"
             [(ngModel)]="report.evaluationBusiness"
             name="evaluationBusiness"
@@ -361,6 +381,7 @@
             #fieldRef
             placeholder="今月の業務達成度や振り返りを記入してください。"
           ></textarea>
+
           <app-char-count [value]="report.evaluationBusiness" [max]="500" />
           <div
             *ngIf="
@@ -380,8 +401,11 @@
             >学習目標（自己評価）</label
           >
           <textarea
+            matInput
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="4"
+            cdkAutosizeMaxRows="15"
             id="evaluationStudy"
-            rows="5"
             class="form-control"
             [(ngModel)]="report.evaluationStudy"
             name="evaluationStudy"
@@ -389,6 +413,7 @@
             #evaluationStudyInput="ngModel"
             placeholder="今月の学習状況や反省点を記入してください。"
           ></textarea>
+
           <app-char-count [value]="report.evaluationStudy" [max]="500" />
           <div
             *ngIf="
@@ -406,8 +431,11 @@
         <div class="col-md-6">
           <label for="goalBusiness" class="form-label">業務目標（来月）</label>
           <textarea
+            matInput
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="4"
+            cdkAutosizeMaxRows="15"
             id="goalBusiness"
-            rows="5"
             class="form-control"
             [(ngModel)]="report.goalBusiness"
             name="goalBusiness"
@@ -415,6 +443,7 @@
             #goalBusinessInput="ngModel"
             placeholder="来月の業務目標や取り組みたい内容を記入してください。"
           ></textarea>
+
           <app-char-count [value]="report.goalBusiness" [max]="500" />
           <div
             *ngIf="
@@ -432,8 +461,11 @@
         <div class="col-md-6">
           <label for="goalStudy" class="form-label">学習目標（来月）</label>
           <textarea
+            matInput
+            cdkTextareaAutosize
+            cdkAutosizeMinRows="4"
+            cdkAutosizeMaxRows="15"
             id="goalStudy"
-            rows="5"
             class="form-control"
             [(ngModel)]="report.goalStudy"
             name="goalStudy"
@@ -441,6 +473,7 @@
             #goalStudyInput="ngModel"
             placeholder="来月の学習計画や意気込みを記入してください。"
           ></textarea>
+
           <app-char-count [value]="report.goalStudy" [max]="500" />
           <div
             *ngIf="
@@ -464,8 +497,11 @@
       <div class="mb-3">
         <label for="contentCompany" class="form-label">会社関係</label>
         <textarea
+          matInput
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="3"
+          cdkAutosizeMaxRows="10"
           id="contentCompany"
-          rows="3"
           class="form-control"
           [(ngModel)]="report.contentCompany"
           name="contentCompany"
@@ -474,6 +510,7 @@
           #fieldRef
           placeholder="会社イベント、制度、設備、働きやすさなど気づいた点を記入してください。"
         ></textarea>
+
         <app-char-count [value]="report.contentCompany" [max]="500" />
         <div
           *ngIf="
@@ -491,8 +528,11 @@
       <div class="mb-3">
         <label for="contentOthers" class="form-label">その他</label>
         <textarea
+          matInput
+          cdkTextareaAutosize
+          cdkAutosizeMinRows="3"
+          cdkAutosizeMaxRows="10"
           id="contentOthers"
-          rows="3"
           class="form-control"
           [(ngModel)]="report.contentOthers"
           name="contentOthers"
@@ -500,6 +540,7 @@
           #contentOthersInput="ngModel"
           placeholder="業務・会社・学習以外で共有しておきたいことを記入してください。"
         ></textarea>
+
         <app-char-count [value]="report.contentOthers" [max]="500" />
         <div
           *ngIf="
@@ -524,8 +565,11 @@
         name="completeFlg"
       />
       <label class="form-check-label" for="completeFlg"
-        >作成完了しました。</label
-      >
+        >作成完了しました。
+      </label>
+      <div class="form-text text-danger">
+        ※すべての入力が完了したらチェックしてください。
+      </div>
     </div>
 
     <div class="text-end">

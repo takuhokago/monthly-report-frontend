@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/button/button.component';
 import { NgForm } from '@angular/forms';
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-report-edit',
@@ -19,6 +21,8 @@ import { NgForm } from '@angular/forms';
     CharCountComponent,
     RouterLink,
     ButtonComponent,
+    TextFieldModule,
+    MatInputModule,
   ],
   templateUrl: './report-edit.component.html',
 })

@@ -12,6 +12,8 @@ import { RouterLink } from '@angular/router';
 import { ButtonComponent } from '../../../../shared/button/button.component';
 import { EmployeeService } from '../../../employees/services/employee.service';
 import { ActivatedRoute } from '@angular/router';
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { MatInputModule } from '@angular/material/input';
 @Component({
   standalone: true,
   selector: 'app-report-new',
@@ -21,6 +23,8 @@ import { ActivatedRoute } from '@angular/router';
     CharCountComponent,
     RouterLink,
     ButtonComponent,
+    TextFieldModule,
+    MatInputModule,
   ],
   templateUrl: './report-new.component.html',
 })
