@@ -12,6 +12,7 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { ExcelDownloadService } from '../../services/excel-download.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ApproveConfirmDialogComponent } from '../approve-confirm-dialog/approve-confirm-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   standalone: true,
@@ -23,6 +24,7 @@ import { ApproveConfirmDialogComponent } from '../approve-confirm-dialog/approve
     CharCountComponent,
     ButtonComponent,
     MatDialogModule,
+    MatTooltipModule,
   ],
   templateUrl: './report-detail.component.html',
 })

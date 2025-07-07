@@ -12,12 +12,24 @@
       ></app-button>
 
       <ng-container *ngIf="isMine(report)">
-        <app-button
-          label="編集"
-          color="blue"
-          [routerLink]="'/reports/' + report.id + '/edit'"
-          [block]="true"
-        ></app-button>
+        <span
+          [matTooltip]="
+            report.approvalFlg ? '承認済みのため編集できません' : ''
+          "
+        >
+          <app-button
+            label="編集"
+            color="blue"
+            [routerLink]="
+              !report.approvalFlg
+                ? '/reports/' + report.id + '/edit'
+                : undefined
+            "
+            [block]="true"
+            [disabled]="!!report.approvalFlg"
+          ></app-button>
+        </span>
+
         <app-button
           label="削除"
           color="red"
