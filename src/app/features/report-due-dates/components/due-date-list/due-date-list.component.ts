@@ -198,10 +198,15 @@ export class DueDateListComponent implements OnInit {
   }
 
   getMaxDateTime(due: { year: number; month: number }): string {
-    const year = due.year;
-    const month = due.month;
-    const lastDay = new Date(year, month, 0).getDate(); // 0日で前月末日
-    const date = new Date(year, month - 1, lastDay, 23, 59);
+    let year = due.year;
+    let month = due.month + 1;
+    // 月が13になったら翌年の1月に補正
+    if (month > 12) {
+      year += 1;
+      month = 1;
+    }
+    const lastDay = new Date(year, month, 0).getDate(); // 次の月の末日
+    const date = new Date(year, month - 1, lastDay, 23, 59); // JSは0-indexedの月
     return this.toLocalDateTimeString(date);
   }
 
