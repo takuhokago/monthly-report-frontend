@@ -38,6 +38,9 @@ export class ReportDetailComponent {
   timeOverHour: number = 0;
   timeOverMinute: number = 0;
 
+  private currentReportId: string = '';
+  private currentReportMonth: string = '';
+
   constructor(
     private route: ActivatedRoute,
     private reportService: ReportService,
@@ -51,9 +54,14 @@ export class ReportDetailComponent {
 
   loadReport(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
+    this.currentReportId = id;
+
     this.report$ = this.reportService.getReportById(id, true).pipe(
       map((res) => {
         const report = res.report;
+
+        // 年月を保持（例: "2025-07"）
+        this.currentReportMonth = report.reportMonth;
 
         // 分 → 時間＋分
         this.timeWorkedHour = Math.floor(report.timeWorked / 60);
@@ -165,5 +173,33 @@ export class ReportDetailComponent {
       default:
         return '';
     }
+  }
+
+  openReportInNewTab(offset: number): void {
+    if (!this.currentReportId || !this.currentReportMonth) return;
+
+    const [year, month] = this.currentReportMonth.split('-').map(Number);
+    let targetYear = year;
+    let targetMonth = month + offset;
+
+    while (targetMonth <= 0) {
+      targetMonth += 12;
+      targetYear -= 1;
+    }
+
+    while (targetMonth > 12) {
+      targetMonth -= 12;
+      targetYear += 1;
+    }
+
+    const ym = `${targetYear}-${String(targetMonth).padStart(2, '0')}`;
+
+    this.reportService
+      .getReportByYearMonth(this.currentReportId, ym)
+      .subscribe({
+        next: (res) => window.open(`/reports/${res.report.id}`, '_blank'),
+        error: () =>
+          alert(`指定された月（${ym}）の報告書は見つかりませんでした。`),
+      });
   }
 }

@@ -94,4 +94,17 @@ export class ReportService {
       withCredentials: true,
     });
   }
+
+  // 年月を指定して報告書を取得
+  getReportByYearMonth(
+    baseReportId: string,
+    yearMonth: string
+  ): Observable<ReportResponse> {
+    return this.http.get<ReportResponse>(
+      `${this.API_URL}/${baseReportId}/month/${yearMonth}`,
+      {
+        withCredentials: true,
+      }
+    );
+  }
 }

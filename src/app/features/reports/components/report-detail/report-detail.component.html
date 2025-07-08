@@ -77,8 +77,8 @@
       </button>
     </div>
 
-    <h2 class="mt-4 mb-3 border-bottom pb-2">メタ情報</h2>
-    <div class="pb-4">
+    <h2 class="mt-4 border-bottom">メタ情報</h2>
+    <div class="pb-3">
       <table class="table table-striped table-hover">
         <tbody>
           <tr>
@@ -144,6 +144,25 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 flex-md-row flex-column mb-4">
+      <span matTooltip="前月分の報告書を新しいタブで開く">
+        <app-button
+          label="前月"
+          color="gray"
+          (click)="openReportInNewTab(-1)"
+          [block]="true"
+        ></app-button>
+      </span>
+      <span matTooltip="前々月分の報告書を新しいタブで開く">
+        <app-button
+          label="前々月"
+          color="gray"
+          (click)="openReportInNewTab(-2)"
+          [block]="true"
+        ></app-button>
+      </span>
     </div>
 
     <!-- 業務内容 -->
