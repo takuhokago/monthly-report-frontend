@@ -111,8 +111,6 @@
               type="datetime-local"
               [(ngModel)]="due.dueDateTime"
               name="dueDateTime{{ i }}"
-              [min]="getMinDateTime(due)"
-              [max]="getMaxDateTime(due)"
               required
               #dtInput="ngModel"
               [class.is-invalid]="dtInput.invalid && dtInput.touched"
