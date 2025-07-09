@@ -43,6 +43,7 @@ export class ReportTableComponent implements OnInit, AfterViewInit {
     'actions',
   ];
   dueDateOfCurrentMonth?: Date;
+  currentMonth: number = new Date().getMonth() + 1;
 
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;

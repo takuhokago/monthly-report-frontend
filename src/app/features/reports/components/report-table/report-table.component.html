@@ -5,7 +5,7 @@
         <h1>📄 報告書一覧</h1>
         <div *ngIf="dueDateOfCurrentMonth as due" class="text-end">
           <small class="text-muted">
-            今月の提出期日:<br />
+            {{ currentMonth }}月の提出期日:<br />
             {{ formatDate(due.toString(), "datetime") }}
           </small>
         </div>
