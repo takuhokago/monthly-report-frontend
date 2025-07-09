@@ -91,7 +91,10 @@ export class ReportTableComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  formatDate(input: string, mode: 'month' | 'date' | 'datetime'): string {
+  formatDate(
+    input: string,
+    mode: 'month' | 'date' | 'datetime' | 'datetimeWithDay'
+  ): string {
     if (!input) return '';
     const date = new Date(input);
     const y = date.getFullYear();
@@ -100,6 +103,8 @@ export class ReportTableComponent implements OnInit, AfterViewInit {
     const hh = ('0' + date.getHours()).slice(-2);
     const mm = ('0' + date.getMinutes()).slice(-2);
 
+    const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+
     switch (mode) {
       case 'month':
         return `${y}/${m}`;
@@ -107,6 +112,8 @@ export class ReportTableComponent implements OnInit, AfterViewInit {
         return `${m}/${d}`;
       case 'datetime':
         return `${y}/${m}/${d} ${hh}:${mm}`;
+      case 'datetimeWithDay':
+        return `${y}/${m}/${d}(${dayOfWeek})${hh}:${mm}`;
       default:
         return '';
     }

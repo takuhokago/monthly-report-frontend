@@ -6,7 +6,7 @@
         <div *ngIf="dueDateOfCurrentMonth as due" class="text-end">
           <small class="text-muted">
             {{ currentMonth }}月の提出期日:<br />
-            {{ formatDate(due.toString(), "datetime") }}
+            {{ formatDate(due.toString(), "datetimeWithDay") }}
           </small>
         </div>
       </div>
