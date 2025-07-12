@@ -8,6 +8,7 @@
         label="一覧に戻る"
         color="gray"
         [routerLink]="'/reports'"
+        [queryParams]="{ selectedMonth: reportMonth }"
         [block]="true"
       ></app-button>
 

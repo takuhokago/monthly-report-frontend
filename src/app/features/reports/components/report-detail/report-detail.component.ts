@@ -52,6 +52,10 @@ export class ReportDetailComponent {
     this.loadReport();
   }
 
+  get reportMonth(): string {
+    return this.currentReportMonth;
+  }
+
   loadReport(): void {
     const id = this.route.snapshot.paramMap.get('id')!;
     this.currentReportId = id;

@@ -16,6 +16,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { ExcelDownloadService } from '../../services/excel-download.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-report-list',
@@ -61,7 +62,8 @@ export class ReportListComponent implements OnInit {
 
   constructor(
     private reportService: ReportService,
-    private excelDownloadService: ExcelDownloadService
+    private excelDownloadService: ExcelDownloadService,
+    private route: ActivatedRoute
   ) {
     this.dataSource.sortingDataAccessor = (item, property) => {
       const value = (item as any)[property];
@@ -70,27 +72,38 @@ export class ReportListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.reportService.getReports().subscribe({
-      next: (res) => {
-        this.reports = res.reportList;
+    this.route.queryParamMap.subscribe((params) => {
+      const monthParam = params.get('selectedMonth');
 
-        // 🔽 ここでキャッシュに保存
-        this.reportService.setCache(res.reportList);
+      this.reportService.getReports().subscribe({
+        next: (res) => {
+          this.reports = res.reportList;
 
-        // ユニークなreportMonthを抽出して降順にソート
-        this.reportMonthList = [
-          ...new Set(this.reports.map((r) => r.reportMonth)),
-        ]
-          .sort()
-          .reverse();
-        this.selectedMonth = this.reportMonthList[0]; // 最新の月を初期選択
-        this.updateTableData();
-        this.loading = false; // ローディング完了
-      },
-      error: (err) => {
-        console.error('取得失敗', err);
-        this.loading = false; // エラー時もローディング完了
-      },
+          // 🔽 ここでキャッシュに保存
+          this.reportService.setCache(res.reportList);
+
+          // ユニークなreportMonthを抽出して降順にソート
+          this.reportMonthList = [
+            ...new Set(this.reports.map((r) => r.reportMonth)),
+          ]
+            .sort()
+            .reverse();
+
+          // クエリパラメータが reportMonthList に含まれていれば初期値に使用
+          if (monthParam && this.reportMonthList.includes(monthParam)) {
+            this.selectedMonth = monthParam;
+          } else {
+            this.selectedMonth = this.reportMonthList[0]; // 通常通り最新の月を選択
+          }
+
+          this.updateTableData();
+          this.loading = false; // ローディング完了
+        },
+        error: (err) => {
+          console.error('取得失敗', err);
+          this.loading = false; // エラー時もローディング完了
+        },
+      });
     });
   }
 
