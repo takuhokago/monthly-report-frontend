@@ -73,18 +73,18 @@
           class="form-control"
           [(ngModel)]="report.contentBusiness"
           name="contentBusiness"
-          maxlength="1000"
+          maxlength="1500"
           #contentBusinessInput="ngModel"
           #fieldRef
           placeholder="使用したツールや開発環境、手法などを記入してください。"
         ></textarea>
 
-        <app-char-count [value]="report.contentBusiness" [max]="1000" />
+        <app-char-count [value]="report.contentBusiness" [max]="1500" />
         <div
           *ngIf="contentBusinessInput.invalid && contentBusinessInput.touched"
           class="form-text text-danger"
         >
-          1000文字以内で入力してください。
+          1500文字以内で入力してください。
         </div>
       </div>
 
