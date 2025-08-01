@@ -68,23 +68,23 @@
           matInput
           cdkTextareaAutosize
           cdkAutosizeMinRows="12"
-          cdkAutosizeMaxRows="30"
+          cdkAutosizeMaxRows="40"
           id="contentBusiness"
           class="form-control"
           [(ngModel)]="report.contentBusiness"
           name="contentBusiness"
-          maxlength="1500"
+          maxlength="2000"
           #contentBusinessInput="ngModel"
           #fieldRef
           placeholder="使用したツールや開発環境、手法などを記入してください。"
         ></textarea>
 
-        <app-char-count [value]="report.contentBusiness" [max]="1500" />
+        <app-char-count [value]="report.contentBusiness" [max]="2000" />
         <div
           *ngIf="contentBusinessInput.invalid && contentBusinessInput.touched"
           class="form-text text-danger"
         >
-          1500文字以内で入力してください。
+          2000文字以内で入力してください。
         </div>
       </div>
 
@@ -95,22 +95,22 @@
           matInput
           cdkTextareaAutosize
           cdkAutosizeMinRows="10"
-          cdkAutosizeMaxRows="20"
+          cdkAutosizeMaxRows="30"
           id="contentMember"
           class="form-control"
           [(ngModel)]="report.contentMember"
           name="contentMember"
-          maxlength="800"
+          maxlength="1500"
           #contentMemberInput="ngModel"
           placeholder="関わったメンバー、役割分担、連携内容などを記入してください。"
         ></textarea>
 
-        <app-char-count [value]="report.contentMember" [max]="800" />
+        <app-char-count [value]="report.contentMember" [max]="1500" />
         <div
           *ngIf="contentMemberInput.invalid && contentMemberInput.touched"
           class="form-text text-danger"
         >
-          800文字以内で入力してください。
+          1500文字以内で入力してください。
         </div>
       </div>
 
