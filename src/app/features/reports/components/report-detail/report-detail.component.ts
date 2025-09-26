@@ -27,6 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTooltipModule,
   ],
   templateUrl: './report-detail.component.html',
+  styleUrls: ['./report-detail.component.scss'],
 })
 export class ReportDetailComponent {
   report$!: Observable<ReportDto>;
@@ -100,7 +101,7 @@ export class ReportDetailComponent {
         this.reportService.approveReport(id, approve).subscribe({
           next: () => {
             alert(approve ? '承認しました。' : '否認にしました。');
-            this.loadReport();
+            this.router.navigate(['/reports']);
           },
           error: (err) => {
             console.error('承認処理に失敗しました:', err);

@@ -1,0 +1,11 @@
+.button-bar {
+  position: sticky;
+  top: 52px; /* ヘッダー高さに合わせる */
+  z-index: 999;
+
+  background: #fff; /* 背景で透け防止 */
+  padding: 12px; /* 少し余裕をもたせる */
+
+  border-bottom: 1px solid #e0e0e0; /* 薄い境界線 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* ほんのり影 */
+}
