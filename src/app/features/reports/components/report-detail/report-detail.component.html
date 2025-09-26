@@ -2,80 +2,82 @@
   <div class="container mt-5 pt-4 pb-4">
     <h1 class="mb-1">報告書 詳細</h1>
 
-    <!-- 一覧・編集ボタン・削除ボタン -->
-    <div class="d-flex flex-wrap gap-2 flex-md-row flex-column mt-4 button-bar">
-      <app-button
-        label="一覧に戻る"
-        color="gray"
-        [routerLink]="'/reports'"
-        [queryParams]="{ selectedMonth: reportMonth }"
-        [block]="true"
-      ></app-button>
-
-      <ng-container *ngIf="isMine(report)">
-        <span
-          [matTooltip]="
-            report.approvalFlg ? '承認済みのため編集できません' : ''
-          "
-        >
-          <app-button
-            label="編集"
-            color="blue"
-            [routerLink]="
-              !report.approvalFlg
-                ? '/reports/' + report.id + '/edit'
-                : undefined
-            "
-            [block]="true"
-            [disabled]="!!report.approvalFlg"
-          ></app-button>
-        </span>
-
+    <div class="button-bar">
+      <!-- 一覧・編集ボタン・削除ボタン -->
+      <div class="d-flex flex-wrap gap-2 flex-md-row flex-column mt-1">
         <app-button
-          label="削除"
-          color="red"
-          (click)="onDelete(report.id)"
+          label="一覧に戻る"
+          color="gray"
+          [routerLink]="'/reports'"
+          [queryParams]="{ selectedMonth: reportMonth }"
           [block]="true"
         ></app-button>
-      </ng-container>
 
-      <app-button
-        label="承認処理"
-        color="yellow"
-        (click)="onApprove(report.id)"
-        [block]="true"
-        *ngIf="isAdmin()"
-      ></app-button>
+        <ng-container *ngIf="isMine(report)">
+          <span
+            [matTooltip]="
+              report.approvalFlg ? '承認済みのため編集できません' : ''
+            "
+          >
+            <app-button
+              label="編集"
+              color="blue"
+              [routerLink]="
+                !report.approvalFlg
+                  ? '/reports/' + report.id + '/edit'
+                  : undefined
+              "
+              [block]="true"
+              [disabled]="!!report.approvalFlg"
+            ></app-button>
+          </span>
 
-      <app-button
-        [label]="isCommentFormVisible ? 'キャンセル' : 'コメント追加'"
-        color="teal"
-        (click)="toggleCommentForm(report.comment)"
-        [block]="true"
-        *ngIf="isAdmin()"
-      ></app-button>
+          <app-button
+            label="削除"
+            color="red"
+            (click)="onDelete(report.id)"
+            [block]="true"
+          ></app-button>
+        </ng-container>
 
-      <app-button
-        label="Excel出力"
-        color="green"
-        (click)="onExportExcel(report.id)"
-        [block]="true"
-      ></app-button>
-    </div>
+        <app-button
+          label="承認処理"
+          color="yellow"
+          (click)="onApprove(report.id)"
+          [block]="true"
+          *ngIf="isAdmin()"
+        ></app-button>
 
-    <!-- コメント入力フォーム -->
-    <div *ngIf="isCommentFormVisible" class="mt-3">
-      <textarea
-        [(ngModel)]="commentText"
-        class="form-control mb-2"
-        rows="3"
-        placeholder="コメントを入力してください"
-        maxlength="800"
-      ></textarea>
-      <app-char-count [value]="commentText" [max]="800" />
-      <button class="btn btn-primary" (click)="onSubmitComment(report.id)">
-        送信
-      </button>
+        <app-button
+          [label]="isCommentFormVisible ? 'キャンセル' : 'コメント追加'"
+          color="teal"
+          (click)="toggleCommentForm(report.comment)"
+          [block]="true"
+          *ngIf="isAdmin()"
+        ></app-button>
+
+        <app-button
+          label="Excel出力"
+          color="green"
+          (click)="onExportExcel(report.id)"
+          [block]="true"
+        ></app-button>
+      </div>
+
+      <!-- コメント入力フォーム -->
+      <div *ngIf="isCommentFormVisible" class="mt-3">
+        <textarea
+          [(ngModel)]="commentText"
+          class="form-control mb-2"
+          rows="3"
+          placeholder="コメントを入力してください"
+          maxlength="800"
+        ></textarea>
+        <app-char-count [value]="commentText" [max]="800" />
+        <button class="btn btn-primary" (click)="onSubmitComment(report.id)">
+          送信
+        </button>
+      </div>
     </div>
 
     <h2 class="mt-4 border-bottom">メタ情報</h2>
