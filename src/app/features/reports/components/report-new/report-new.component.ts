@@ -197,4 +197,13 @@ export class ReportNewComponent {
       },
     });
   }
+
+  onBackToList(): void {
+    const confirmed = window.confirm(
+      '編集中の内容は保存されません。よろしいですか？'
+    );
+    if (confirmed) {
+      this.router.navigate(['/reports']);
+    }
+  }
 }

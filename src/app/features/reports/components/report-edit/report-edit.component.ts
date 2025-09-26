@@ -79,4 +79,20 @@ export class ReportEditComponent implements OnInit {
       },
     });
   }
+
+  onBackToDetail(form?: NgForm): void {
+    // 入力が変わっていないならそのまま戻る
+    if (!form?.dirty) {
+      this.router.navigate(['/reports', this.reportId]);
+      return;
+    }
+
+    // 編集途中なら確認ダイアログ
+    const confirmed = window.confirm(
+      '編集中の内容は保存されません。よろしいですか？'
+    );
+    if (confirmed) {
+      this.router.navigate(['/reports', this.reportId]);
+    }
+  }
 }

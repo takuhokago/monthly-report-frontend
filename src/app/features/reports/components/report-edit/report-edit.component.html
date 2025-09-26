@@ -6,7 +6,7 @@
     <app-button
       label="詳細に戻る"
       color="gray"
-      [routerLink]="'/reports/' + reportId"
+      (click)="onBackToDetail(form)"
       [block]="true"
     ></app-button>
   </div>
