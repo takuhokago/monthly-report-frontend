@@ -39,7 +39,7 @@ export interface ReportResponse {
   report: ReportDto;
 }
 
-export type ReportCreateRequest = Omit<
+export type ReportUpsertRequest = Omit<
   ReportDto,
   | 'id'
   | 'submittedAt'

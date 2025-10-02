@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {
-  ReportCreateRequest,
+  ReportUpsertRequest,
   ReportDto,
   ReportListResponse,
   ReportResponse,
@@ -25,7 +25,7 @@ export class ReportService {
     });
   }
 
-  createReport(report: ReportCreateRequest): Observable<ReportResponse> {
+  createReport(report: ReportUpsertRequest): Observable<ReportResponse> {
     return this.http.post<ReportResponse>(this.API_URL, report, {
       withCredentials: true,
     });

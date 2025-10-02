@@ -1,38 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService } from '../../services/report.service';
-import { ReportDto } from '../../models/report.dto';
-import { CharCountComponent } from '../../../../shared/char-count/char-count.component';
-import { Router } from '@angular/router';
-import { RouterLink } from '@angular/router';
-import { ButtonComponent } from '../../../../shared/button/button.component';
-import { NgForm } from '@angular/forms';
-import { TextFieldModule } from '@angular/cdk/text-field';
-import { MatInputModule } from '@angular/material/input';
+import { ReportDto, ReportUpsertRequest } from '../../models/report.dto';
+import { ReportFormComponent } from '../report-form/report-form.component';
 
 @Component({
   selector: 'app-report-edit',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    CharCountComponent,
-    RouterLink,
-    ButtonComponent,
-    TextFieldModule,
-    MatInputModule,
-  ],
+  imports: [CommonModule, ReportFormComponent],
   templateUrl: './report-edit.component.html',
 })
 export class ReportEditComponent implements OnInit {
   reportId!: string;
-  report: ReportDto = {} as ReportDto;
-  timeWorkedHour: number = 0;
-  timeWorkedMinute: number = 0;
-  timeOverHour: number = 0;
-  timeOverMinute: number = 0;
+
+  /** 取得した元データ（サーバ管理項目保持用） */
+  original: ReportDto | null = null;
+
+  /** フォームへ渡すモデル（共通のUpsert型） */
+  formModel: ReportUpsertRequest | null = null;
+
+  loading = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,50 +32,75 @@ export class ReportEditComponent implements OnInit {
     this.reportId = this.route.snapshot.paramMap.get('id')!;
     this.reportService.getReportById(this.reportId, true).subscribe({
       next: (res) => {
-        this.report = res.report;
-
-        // 既存の値（分）→ 時間＋分 に変換
-        this.timeWorkedHour = Math.floor(this.report.timeWorked / 60);
-        this.timeWorkedMinute = this.report.timeWorked % 60;
-        this.timeOverHour = Math.floor(this.report.timeOver / 60);
-        this.timeOverMinute = this.report.timeOver % 60;
+        this.original = res.report;
+        this.formModel = this.toFormModel(res.report);
+        this.loading = false;
       },
       error: (err) => {
         console.error('取得失敗:', err);
+        this.loading = false;
       },
     });
   }
 
-  onSubmit(form: NgForm): void {
-    if (form.invalid) {
-      form.control.markAllAsTouched();
-      return;
-    }
-
-    // 分単位に変換して本体に代入
-    this.report.timeWorked = this.timeWorkedHour * 60 + this.timeWorkedMinute;
-    this.report.timeOver = this.timeOverHour * 60 + this.timeOverMinute;
-
-    this.reportService.updateReport(this.reportId, this.report).subscribe({
-      next: (res) => {
-        alert('報告書を更新しました');
-        this.router.navigate(['/reports', this.reportId]);
-      },
-      error: (err) => {
-        console.error('更新に失敗しました:', err);
-        alert('報告書の更新に失敗しました');
-      },
-    });
+  /** ReportDto → ReportUpsertRequest（フォーム用） */
+  private toFormModel(dto: ReportDto): ReportUpsertRequest {
+    return {
+      reportMonth: dto.reportMonth ?? '',
+      contentBusiness: dto.contentBusiness ?? '',
+      timeWorked: dto.timeWorked ?? 0,
+      timeOver: dto.timeOver ?? 0,
+      rateBusiness: dto.rateBusiness ?? 0,
+      rateStudy: dto.rateStudy ?? 0,
+      trendBusiness: dto.trendBusiness ?? 0,
+      contentMember: dto.contentMember ?? '',
+      contentCustomer: dto.contentCustomer ?? '',
+      contentProblem: dto.contentProblem ?? '',
+      evaluationBusiness: dto.evaluationBusiness ?? '',
+      evaluationStudy: dto.evaluationStudy ?? '',
+      goalBusiness: dto.goalBusiness ?? '',
+      goalStudy: dto.goalStudy ?? '',
+      contentCompany: dto.contentCompany ?? '',
+      contentOthers: dto.contentOthers ?? '',
+      completeFlg: !!dto.completeFlg,
+      // フォーム契約上の表示用も保持
+      employeeCode: dto.employeeCode ?? '',
+      employeeName: dto.employeeName ?? '',
+      departmentName: dto.departmentName ?? '',
+    };
   }
 
-  onBackToDetail(form?: NgForm): void {
-    // 入力が変わっていないならそのまま戻る
-    if (!form?.dirty) {
-      this.router.navigate(['/reports', this.reportId]);
-      return;
-    }
+  /** 共通フォームの submit を受けて更新 */
+  onSubmitFromForm(formValue: ReportUpsertRequest): void {
+    if (!this.original) return;
 
-    // 編集途中なら確認ダイアログ
+    // null上書き防止：original をベースに完全体へマージして送る
+    const payload: ReportDto = {
+      ...this.original,
+      ...formValue,
+      id: this.original.id,
+      // 変更不可にしたい項目は original を優先（必要に応じて）
+      employeeCode: this.original.employeeCode,
+      employeeName: this.original.employeeName,
+      departmentName: this.original.departmentName,
+      // submittedAt / updatedAt / reportDeadline / dueDate / approvalFlg / comment は original を維持
+    };
+
+    this.reportService
+      .updateReport(String(this.original.id), payload)
+      .subscribe({
+        next: () => {
+          alert('報告書を更新しました');
+          this.router.navigate(['/reports', this.reportId]);
+        },
+        error: (err) => {
+          console.error('更新に失敗しました:', err);
+          alert(err?.error?.message ?? '報告書の更新に失敗しました');
+        },
+      });
+  }
+
+  onCancel(): void {
     const confirmed = window.confirm(
       '編集中の内容は保存されません。よろしいですか？'
     );

@@ -1,41 +1,26 @@
-import { Component, QueryList, ViewChildren, ElementRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReportService } from '../../services/report.service';
-import { ReportDto } from '../../models/report.dto';
-import { ReportCreateRequest } from '../../models/report.dto';
+import { ReportDto, ReportUpsertRequest } from '../../models/report.dto';
 import { AuthService } from '../../../auth/services/auth.service';
-import { NgForm, NgModel } from '@angular/forms';
-import { CharCountComponent } from '../../../../shared/char-count/char-count.component';
-import { RouterLink } from '@angular/router';
-import { ButtonComponent } from '../../../../shared/button/button.component';
 import { EmployeeService } from '../../../employees/services/employee.service';
 import { ActivatedRoute } from '@angular/router';
-import { TextFieldModule } from '@angular/cdk/text-field';
-import { MatInputModule } from '@angular/material/input';
+import { ReportFormComponent } from '../report-form/report-form.component';
+
 @Component({
   standalone: true,
   selector: 'app-report-new',
   imports: [
     CommonModule,
-    FormsModule,
-    CharCountComponent,
-    RouterLink,
-    ButtonComponent,
-    TextFieldModule,
-    MatInputModule,
+    ReportFormComponent, // 共通フォームを利用
   ],
   templateUrl: './report-new.component.html',
 })
 export class ReportNewComponent {
-  useLatest: boolean = false;
-  timeWorkedHour: number = 0;
-  timeWorkedMinute: number = 0;
-  timeOverHour: number = 0;
-  timeOverMinute: number = 0;
+  useLatest = false;
 
-  report: ReportCreateRequest = {
+  report: ReportUpsertRequest = {
     reportMonth: '',
     contentBusiness: '',
     timeWorked: 0,
@@ -58,8 +43,6 @@ export class ReportNewComponent {
     departmentName: '',
   };
 
-  @ViewChildren('fieldRef') fields!: QueryList<ElementRef>;
-
   constructor(
     private reportService: ReportService,
     private router: Router,
@@ -78,19 +61,26 @@ export class ReportNewComponent {
 
       this.employeeService.getByCode(user.code).subscribe({
         next: (employee) => {
-          this.report.employeeName = employee.fullName ?? '';
-          this.report.departmentName = employee.departmentName ?? '';
+          // 参照を変える
+          this.report = {
+            ...this.report,
+            employeeName: employee.fullName ?? '',
+            departmentName: employee.departmentName ?? '',
+          };
 
           if (this.useLatest) {
-            this.loadLatestReport();
+            this.loadLatestReport(); // こちらは既に参照を変えていてOK
           }
 
-          // 日付は現在の年月に設定
           const now = new Date();
-          this.report.reportMonth = `${now.getFullYear()}-${String(
-            now.getMonth() + 1
-          ).padStart(2, '0')}`;
+          this.report = {
+            ...this.report,
+            reportMonth: `${now.getFullYear()}-${String(
+              now.getMonth() + 1
+            ).padStart(2, '0')}`,
+          };
         },
+
         error: (err) => {
           console.error('社員情報の取得に失敗しました', err);
         },
@@ -98,98 +88,46 @@ export class ReportNewComponent {
     }
   }
 
-  onSubmit(form: NgForm): void {
-    if (form.invalid) {
-      // バリデーション表示
-      Object.values(form.controls).forEach((control) =>
-        control.markAsTouched()
-      );
-
-      // 最初のエラー要素にスクロール
-      setTimeout(() => {
-        const firstInvalid = this.fields.find((el, index) => {
-          const controlName = Object.keys(form.controls)[index];
-          return form.controls[controlName]?.invalid;
-        });
-        if (firstInvalid) {
-          firstInvalid.nativeElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-          });
-          firstInvalid.nativeElement.focus();
-        }
-      }, 0);
-
-      return;
-    }
-
-    // 分単位に変換して本体に代入
-    this.report.timeWorked = this.timeWorkedHour * 60 + this.timeWorkedMinute;
-    this.report.timeOver = this.timeOverHour * 60 + this.timeOverMinute;
-
-    // フォームが有効な場合は登録処理
-    this.reportService.createReport(this.report).subscribe({
+  /** 共通フォームから呼ばれる新規作成処理 */
+  onCreate(report: ReportUpsertRequest): void {
+    console.log('onCreate called!', report);
+    this.reportService.createReport(report).subscribe({
       next: (res) => {
         console.log('登録成功:', res);
         this.router.navigate(['/reports']);
       },
       error: (err) => {
         console.error('登録失敗:', err);
-
-        // サーバーからのエラーメッセージがある場合は表示
         const message =
           err?.error?.message ?? '登録に失敗しました。もう一度お試しください。';
-
         alert(message);
       },
     });
   }
 
+  /** 最新レポートの読み込み */
   private loadLatestReport(): void {
     this.reportService.getLatestReport().subscribe({
       next: (latest: ReportDto) => {
         if (latest) {
-          const {
-            contentBusiness,
-            timeWorked,
-            timeOver,
-            rateBusiness,
-            rateStudy,
-            trendBusiness,
-            contentMember,
-            contentCustomer,
-            contentProblem,
-            evaluationBusiness,
-            evaluationStudy,
-            goalBusiness,
-            goalStudy,
-            contentCompany,
-            contentOthers,
-          } = latest;
-
-          Object.assign(this.report, {
-            contentBusiness,
-            timeWorked,
-            timeOver,
-            rateBusiness,
-            rateStudy,
-            trendBusiness,
-            contentMember,
-            contentCustomer,
-            contentProblem,
-            evaluationBusiness,
-            evaluationStudy,
-            goalBusiness,
-            goalStudy,
-            contentCompany,
-            contentOthers,
-          });
-
-          // 既存の値（分）→ 時間＋分 に変換
-          this.timeWorkedHour = Math.floor(this.report.timeWorked / 60);
-          this.timeWorkedMinute = this.report.timeWorked % 60;
-          this.timeOverHour = Math.floor(this.report.timeOver / 60);
-          this.timeOverMinute = this.report.timeOver % 60;
+          this.report = {
+            ...this.report, // 既存の値を保持（employeeCode, reportMonthなど）
+            contentBusiness: latest.contentBusiness,
+            timeWorked: latest.timeWorked,
+            timeOver: latest.timeOver,
+            rateBusiness: latest.rateBusiness,
+            rateStudy: latest.rateStudy,
+            trendBusiness: latest.trendBusiness,
+            contentMember: latest.contentMember,
+            contentCustomer: latest.contentCustomer,
+            contentProblem: latest.contentProblem,
+            evaluationBusiness: latest.evaluationBusiness,
+            evaluationStudy: latest.evaluationStudy,
+            goalBusiness: latest.goalBusiness,
+            goalStudy: latest.goalStudy,
+            contentCompany: latest.contentCompany,
+            contentOthers: latest.contentOthers,
+          };
         }
       },
       error: (err) => {
@@ -198,6 +136,7 @@ export class ReportNewComponent {
     });
   }
 
+  /** 戻る処理 */
   onBackToList(): void {
     const confirmed = window.confirm(
       '編集中の内容は保存されません。よろしいですか？'
