@@ -101,7 +101,9 @@ export class ReportDetailComponent {
         this.reportService.approveReport(id, approve).subscribe({
           next: () => {
             alert(approve ? '承認しました。' : '否認にしました。');
-            this.router.navigate(['/reports']);
+            this.router.navigate(['/reports'], {
+              queryParams: { selectedMonth: this.currentReportMonth },
+            });
           },
           error: (err) => {
             console.error('承認処理に失敗しました:', err);
