@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @use "./app/shared/styles/card";
+@import "bootstrap/scss/bootstrap"; // 先に読み込み
 
 html,
 body {
@@ -8,4 +9,8 @@ body {
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+[hidden] {
+  display: none !important;
 }
