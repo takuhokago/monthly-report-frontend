@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://noble-ebonee-ssk2026-f6949778.koyeb.app"
+      "destination": "https://noble-ebonee-ssk2026-f6949778.koyeb.app/api/$1"
     }
   ]
 }
