@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { LoginRequest } from '../../models/login-request.dto';
 import { LoginResponse } from '../../models/login-response.dto';
+import { switchMap, finalize, delay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -17,35 +18,37 @@ export class LoginComponent {
   code = '';
   password = '';
   errorMessage = '';
+  loading = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+  ) {}
 
   onSubmit(): void {
-  const loginData: LoginRequest = {
-    code: this.code,
-    password: this.password,
-  };
+    this.loading = true;
+    const loginData: LoginRequest = {
+      code: this.code,
+      password: this.password,
+    };
 
-  this.authService.login(loginData).subscribe({
-    next: () => {
-      // ログイン成功後にユーザー情報を取得
-      this.authService.fetchMe().subscribe({
+    this.authService
+      .login(loginData)
+      .pipe(
+        switchMap(() => this.authService.fetchMe()), // ログイン成功後にme取得
+        finalize(() => (this.loading = false)), // 成功でも失敗でも最後に必ずfalse
+      )
+      .subscribe({
         next: (user) => {
           console.log('ログインユーザー:', user);
           this.router.navigate(['/reports']);
         },
         error: (err) => {
-          console.error('ユーザー情報取得失敗:', err);
-          this.errorMessage = 'ログイン後のユーザー情報取得に失敗しました。';
+          console.error(err);
+          // login失敗 / fetchMe失敗どちらでもここに来る
+          this.errorMessage =
+            'ログインに失敗しました。社員番号またはパスワードを確認してください。';
         },
       });
-    },
-    error: (err) => {
-      console.error(err);
-      this.errorMessage =
-        'ログインに失敗しました。社員番号またはパスワードを確認してください。';
-    },
-  });
-}
-
+  }
 }
