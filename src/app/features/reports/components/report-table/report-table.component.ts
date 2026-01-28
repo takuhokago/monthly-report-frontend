@@ -15,6 +15,7 @@ import { ReportService } from '../../services/report.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { RouterLink } from '@angular/router';
 import { ReportDueDateService } from '../../../report-due-dates/services/report-due-date.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-report-table',
@@ -48,10 +49,12 @@ export class ReportTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  loading = false;
+
   constructor(
     private reportService: ReportService,
     private authService: AuthService,
-    private reportDueDateService: ReportDueDateService
+    private reportDueDateService: ReportDueDateService,
   ) {}
 
   ngOnInit(): void {
@@ -71,19 +74,24 @@ export class ReportTableComponent implements OnInit, AfterViewInit {
 
     // レポート一覧を取得
     const currentUser = this.authService.getCurrentUser();
-    this.reportService.getReports().subscribe((response) => {
-      let reports = response.reportList;
+    this.loading = true;
 
-      if (this.filterByUser && currentUser) {
-        reports = reports.filter(
-          (r) => String(r.employeeCode) === currentUser.code
-        );
-      }
+    this.reportService
+      .getReports()
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe((response) => {
+        let reports = response.reportList;
 
-      reports.sort((a, b) => b.reportMonth.localeCompare(a.reportMonth));
+        if (this.filterByUser && currentUser) {
+          reports = reports.filter(
+            (r) => String(r.employeeCode) === currentUser.code,
+          );
+        }
 
-      this.dataSource.data = reports;
-    });
+        reports.sort((a, b) => b.reportMonth.localeCompare(a.reportMonth));
+
+        this.dataSource.data = reports;
+      });
   }
 
   ngAfterViewInit(): void {
@@ -93,7 +101,7 @@ export class ReportTableComponent implements OnInit, AfterViewInit {
 
   formatDate(
     input: string,
-    mode: 'month' | 'date' | 'datetime' | 'datetimeWithDay'
+    mode: 'month' | 'date' | 'datetime' | 'datetimeWithDay',
   ): string {
     if (!input) return '';
     const date = new Date(input);
