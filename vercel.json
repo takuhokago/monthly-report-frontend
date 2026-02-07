@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://monthly-report-api-1cdd61b8449d.herokuapp.com/api/$1"
+      "destination": "https://monthly-report-api.orange-gerbera.jp/api/$1"
     }
   ]
 }
